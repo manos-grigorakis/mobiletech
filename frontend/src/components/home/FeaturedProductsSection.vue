@@ -7,9 +7,7 @@ import { products } from '@/data/Products'
 <template>
   <SectionWrapper title="Featured Products">
     <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-      <div v-for="product in products" :key="product.id">
-        <ProductCard :product="product" />
-      </div>
+      <ProductCard v-for="product in products" :key="product.id" :product="product" />
     </div>
   </SectionWrapper>
 </template>

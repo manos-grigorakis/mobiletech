@@ -49,7 +49,9 @@ const stockClasses = computed(() => {
 
     <!-- Content -->
     <div class="flex flex-col mt-6 grow">
-      <span class="text-sm text-gray-500">{{ product.brand }} • {{ product.category }}</span>
+      <span class="text-sm text-gray-500 capitalize"
+        >{{ product.brand }} • {{ product.category }}</span
+      >
       <h3 class="mt-1 text-lg font-medium">{{ product.name }}</h3>
       <span :class="stockClasses" class="text-xs font-medium tracking-wide">{{ stockLabel }}</span>
       <p class="mt-2 text-sm font-light grow">{{ product.description }}</p>
