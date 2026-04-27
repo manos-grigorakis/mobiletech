@@ -4,7 +4,11 @@
     <div class="flex items-center justify-between md:justify-around">
       <!-- Logo -->
       <div>
-        <RouterLink to="/"><h1 class="text-2xl font-semibold">MobileTech</h1></RouterLink>
+        <RouterLink to="/"
+          ><h1 class="text-2xl font-semibold">
+            Mobile<span class="text-accent-500">Tech</span>
+          </h1></RouterLink
+        >
       </div>
 
       <!-- Open mobile navbar -->
@@ -33,7 +37,11 @@
       <!-- Nav links -->
       <div class="hidden md:flex md:gap-x-20">
         <ul class="flex gap-10 text-sm">
-          <li v-for="link in navLinks" :key="link" class="inline-block capitalize cursor-pointer">
+          <li
+            v-for="link in navLinks"
+            :key="link"
+            class="inline-block capitalize cursor-pointer hover:text-accent-500"
+          >
             <RouterLink :to="'/' + link" @click="closeNavbar">{{ link }}</RouterLink>
           </li>
         </ul>
@@ -69,7 +77,11 @@
       <!-- Links -->
       <transition name="mobileNav">
         <ul v-show="isNavbarOpen" class="flex flex-col gap-2 mt-6 text-sm">
-          <li v-for="link in navLinks" :key="link" class="px-6 py-2 capitalize cursor-pointer">
+          <li
+            v-for="link in navLinks"
+            :key="link"
+            class="px-6 py-2 capitalize cursor-pointer hover:text-accent-500"
+          >
             <RouterLink :to="'/' + link" @click="closeNavbar">{{ link }}</RouterLink>
           </li>
         </ul>
