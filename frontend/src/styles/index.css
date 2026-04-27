@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap');
 
 :root {
   /* Base */
@@ -18,7 +19,16 @@
   --primary-900: #0a254d;
 
   /* Accent */
+  --accent-50: #fff9db;
+  --accent-100: #fff3b0;
+  --accent-200: #ffe680;
+  --accent-300: #ffd94d;
+  --accent-400: #ffcf1a;
   --accent-500: #ffcc00;
+  --accent-600: #e6b800;
+  --accent-700: #b38f00;
+  --accent-800: #806600;
+  --accent-900: #4d3d00;
 }
 
 @theme {
@@ -39,5 +49,18 @@
   --color-primary-900: var(--primary-900);
 
   /* Accent */
+  --color-accent-50: var(--accent-50);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
   --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-accent-800: var(--accent-800);
+  --color-accent-900: var(--accent-900);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
 }
