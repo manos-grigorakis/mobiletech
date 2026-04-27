@@ -52,7 +52,7 @@
     <div v-if="isNavbarOpen" class="fixed inset-0 z-50 px-6 py-6 text-white bg-primary-800">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <RouterLink to="/"><h1 class="text-2xl font-semibold">MobileTech</h1></RouterLink>
+        <RouterLink to="/"><h1 class="text-2xl font-semibold">Mobile<span class="text-accent-500">Tech</span></h1></RouterLink>
 
         <!-- Mobile close button navbar -->
         <button
