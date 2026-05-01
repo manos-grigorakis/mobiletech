@@ -5,8 +5,10 @@ import { useStockStatus } from '@/composables/useStockStatus'
 import { computed, watchEffect } from 'vue'
 import router from '@/router'
 import MainButton from '../ui/MainButton.vue'
+import { useCartStore } from '@/stores/cart'
 
 const route = useRoute()
+const cart = useCartStore()
 const product = computed(() => products.find((p) => p.id === Number(route.params.id)))
 
 watchEffect(() => {
@@ -73,7 +75,11 @@ const { stockLabel, stockClasses } = useStockStatus(computed(() => product.value
           </div>
         </div>
 
-        <MainButton title="Add to card" :disabled="product.stock === 0" />
+        <MainButton
+          @click="cart.addToCart(product)"
+          title="Add to card"
+          :disabled="product.stock === 0"
+        />
       </div>
     </div>
   </section>
