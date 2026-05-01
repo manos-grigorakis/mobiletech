@@ -6,7 +6,13 @@ import { useCartStore } from '@/stores/cart'
 const cart = useCartStore()
 
 const isNavbarOpen = ref(false)
-const navLinks = ['smartphones', 'refurbished', 'accessories', 'deals', 'support']
+const navLinks: { label: string; path: string; query?: Record<string, string> }[] = [
+  { label: 'smartphones', path: '/products', query: { category: 'smartphones' } },
+  { label: 'refurbished', path: '/products', query: { category: 'refurbished' } },
+  { label: 'accessories', path: '/products', query: { category: 'accessories' } },
+  { label: 'deals', path: '/deals' },
+  { label: 'support', path: '/support' },
+]
 
 // Close navbar
 const closeNavbar = () => {
@@ -76,10 +82,12 @@ onUnmounted(() => {
         <ul class="flex gap-10 text-sm">
           <li
             v-for="link in navLinks"
-            :key="link"
+            :key="link.label"
             class="inline-block capitalize cursor-pointer hover:text-accent-500"
           >
-            <RouterLink :to="'/' + link" @click="closeNavbar">{{ link }}</RouterLink>
+            <RouterLink :to="{ path: link.path, query: link.query }" @click="closeNavbar">{{
+              link.label
+            }}</RouterLink>
           </li>
         </ul>
 
@@ -150,10 +158,12 @@ onUnmounted(() => {
         <ul v-show="isNavbarOpen" class="flex flex-col gap-2 mt-6 text-sm">
           <li
             v-for="link in navLinks"
-            :key="link"
+            :key="link.label"
             class="px-6 py-2 capitalize cursor-pointer hover:text-accent-500"
           >
-            <RouterLink :to="'/' + link" @click="closeNavbar">{{ link }}</RouterLink>
+            <RouterLink :to="{ path: link.path, query: link.query }" @click="closeNavbar">{{
+              link.label
+            }}</RouterLink>
           </li>
         </ul>
       </transition>
