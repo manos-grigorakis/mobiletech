@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Product } from '@/types/product'
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
+import { useStockStatus } from '@/composables/useStockStatus'
 
 const { product } = defineProps<{ product: Product }>()
 
@@ -8,34 +10,12 @@ const getImageUrl = (image: String) => {
   return new URL(`../../assets/products/${image}`, import.meta.url).href
 }
 
-const stockStatus = computed(() => {
-  if (product.stock === 0) return 'out'
-  if (product.stock <= 5) return 'low'
-  return 'in'
-})
-
-const stockLabel = computed(() => {
-  if (product.stock === 0) return 'Out of stock'
-  if (product.stock <= 5) return `Only ${product.stock} left`
-  return 'In Stock'
-})
-
-const stockClasses = computed(() => {
-  switch (stockStatus.value) {
-    case 'in':
-      return 'text-green-600'
-    case 'low':
-      return 'text-yellow-600'
-    case 'out':
-      return 'text-red-600'
-    default:
-      return 'text-gray-500'
-  }
-})
+const { stockLabel, stockClasses } = useStockStatus(computed(() => product.stock))
 </script>
 
 <template>
-  <div
+  <RouterLink
+    :to="{ name: 'product-details', params: { id: product.id } }"
     class="flex flex-col h-full px-4 py-5 transition rounded-lg shadow-sm bg-white/80 hover:shadow-md"
   >
     <!-- Image -->
@@ -66,5 +46,5 @@ const stockClasses = computed(() => {
         Add to cart
       </button>
     </div>
-  </div>
+  </RouterLink>
 </template>
