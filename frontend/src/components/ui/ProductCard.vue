@@ -4,16 +4,16 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useStockStatus } from '@/composables/useStockStatus'
 import MainButton from './MainButton.vue'
-import { useCartStore } from '@/stores/cart'
+import { useCartItem } from '@/composables/useCartItem'
 
 const { product } = defineProps<{ product: Product }>()
-const cart = useCartStore()
 
 const getImageUrl = (image: String) => {
   return new URL(`../../assets/products/${image}`, import.meta.url).href
 }
 
 const { stockLabel, stockClasses } = useStockStatus(computed(() => product.stock))
+const { isDisabled, isMaxStock, addToCart } = useCartItem(product)
 </script>
 
 <template>
@@ -45,9 +45,9 @@ const { stockLabel, stockClasses } = useStockStatus(computed(() => product.stock
     </RouterLink>
 
     <MainButton
-      @click="cart.addToCart(product)"
-      title="Add to cart"
-      :disabled="product.stock === 0"
+      @click="addToCart"
+      :title="isMaxStock ? 'Max stock reached' : 'Add to cart'"
+      :disabled="isDisabled"
     />
   </div>
 </template>
