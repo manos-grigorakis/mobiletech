@@ -6,10 +6,11 @@
     <p class="mt-2 text-sm leading-relaxed">
       Find new phones, refurbished devices, chargers, earbuds, cases, and more.
     </p>
-    <button
+    <RouterLink
+      to="/products"
       class="px-4 py-2 mt-4 font-medium text-black rounded bg-accent-500 hover:bg-accent-600 hover:cursor-pointer"
     >
       Shop products
-    </button>
+    </RouterLink>
   </section>
 </template>

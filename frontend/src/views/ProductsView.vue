@@ -26,9 +26,7 @@ const filteredProducts = computed(() => {
     </div>
 
     <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-      <div v-for="product in filteredProducts" :key="product.id">
-        <ProductCard :product="product" />
-      </div>
+      <ProductCard v-for="product in filteredProducts" :key="product.id" :product="product" />
     </div>
   </SectionWrapper>
 </template>
