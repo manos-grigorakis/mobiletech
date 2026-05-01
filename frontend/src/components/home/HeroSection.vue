@@ -1,6 +1,6 @@
 <template>
   <section
-    class="flex flex-col items-center justify-center py-48 text-center text-white bg-primary-700"
+    class="flex flex-col items-center justify-center py-48 -mt-24 text-center text-white bg-primary-700"
   >
     <h1 class="text-4xl">Smartphones and mobile accessories in one place</h1>
     <p class="mt-2 text-sm leading-relaxed">
