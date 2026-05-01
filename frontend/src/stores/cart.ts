@@ -10,7 +10,8 @@ export const useCartStore = defineStore('cart', {
   persist: true,
 
   getters: {
-    totalPrice: (state): number => state.items.reduce((total, item) => total + item.quantity, 0),
+    totalPrice: (state): number =>
+      state.items.reduce((total, item) => total + item.price * item.quantity, 0),
     totalItems: (state): number => state.items.reduce((total, item) => total + item.quantity, 0),
   },
 
@@ -31,8 +32,18 @@ export const useCartStore = defineStore('cart', {
 
     updateQuantity(productId: number, quantity: number) {
       const item = this.items.find((i) => i.id === productId)
+      if (!item) return
 
-      if (item && quantity > 0) item.quantity = quantity
+      if (quantity <= 0) {
+        this.removeFromCart(productId)
+        return
+      }
+
+      if (quantity > item.stock) {
+        item.quantity = item.stock
+      } else {
+        item.quantity = quantity
+      }
     },
 
     clearCart() {
