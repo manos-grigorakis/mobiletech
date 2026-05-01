@@ -5,6 +5,7 @@ import { useStockStatus } from '@/composables/useStockStatus'
 import { computed, watchEffect } from 'vue'
 import router from '@/router'
 import MainButton from '../ui/MainButton.vue'
+import { useCartItem } from '@/composables/useCartItem'
 
 const route = useRoute()
 const product = computed(() => products.find((p) => p.id === Number(route.params.id)))
@@ -18,6 +19,7 @@ const getImageUrl = (image: string) => {
 }
 
 const { stockLabel, stockClasses } = useStockStatus(computed(() => product.value?.stock ?? 0))
+const { isDisabled, isMaxStock, addToCart } = useCartItem(product)
 </script>
 
 <template>
@@ -73,7 +75,11 @@ const { stockLabel, stockClasses } = useStockStatus(computed(() => product.value
           </div>
         </div>
 
-        <MainButton title="Add to card" :disabled="product.stock === 0" />
+        <MainButton
+          @click="addToCart()"
+          :title="isMaxStock ? 'Max stock reached' : 'Add to cart'"
+          :disabled="isDisabled"
+        />
       </div>
     </div>
   </section>
