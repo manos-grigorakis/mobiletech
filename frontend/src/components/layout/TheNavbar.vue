@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
+import { ShoppingCartIcon } from '@lucide/vue'
+
+const isNavbarOpen = ref(false)
+const navLinks = ['smartphones', 'refurbished', 'accessories', 'deals', 'support']
+
+// Close navbar
+const closeNavbar = () => {
+  isNavbarOpen.value = false
+}
+
+// Toggles navbar
+const toggleNavbar = () => {
+  isNavbarOpen.value = !isNavbarOpen.value
+}
+
+// Make sures navbar will be closed in a certain window size and above
+const handleResize = () => {
+  if (window.innerWidth >= 1280) {
+    isNavbarOpen.value = false
+  }
+}
+
+// Lifecycle
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
+</script>
+
 <template>
   <nav ref="desktopNav" class="z-50 p-4 text-white bg-primary-800">
     <!-- Desktop -->
@@ -45,6 +79,13 @@
             <RouterLink :to="'/' + link" @click="closeNavbar">{{ link }}</RouterLink>
           </li>
         </ul>
+
+        <!-- Cart -->
+        <RouterLink :to="{ name: 'cart' }">
+          <ShoppingCartIcon
+            class="transition-colors duration-300 hover:text-accent-500 hover:cursor-pointer"
+          />
+        </RouterLink>
       </div>
     </div>
 
@@ -52,7 +93,11 @@
     <div v-if="isNavbarOpen" class="fixed inset-0 z-50 px-6 py-6 text-white bg-primary-800">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <RouterLink to="/"><h1 class="text-2xl font-semibold">Mobile<span class="text-accent-500">Tech</span></h1></RouterLink>
+        <RouterLink to="/"
+          ><h1 class="text-2xl font-semibold">
+            Mobile<span class="text-accent-500">Tech</span>
+          </h1></RouterLink
+        >
 
         <!-- Mobile close button navbar -->
         <button
@@ -86,42 +131,16 @@
           </li>
         </ul>
       </transition>
+
+      <!-- Cart -->
+      <RouterLink :to="{ name: 'cart' }">
+        <ShoppingCartIcon
+          class="mt-2 ml-6 transition-colors duration-300 hover:text-accent-500 hover:cursor-pointer"
+        />
+      </RouterLink>
     </div>
   </nav>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-
-const isNavbarOpen = ref(false)
-const navLinks = ['smartphones', 'refurbished', 'accessories', 'deals', 'support']
-
-// Close navbar
-const closeNavbar = () => {
-  isNavbarOpen.value = false
-}
-
-// Toggles navbar
-const toggleNavbar = () => {
-  isNavbarOpen.value = !isNavbarOpen.value
-}
-
-// Make sures navbar will be closed in a certain window size and above
-const handleResize = () => {
-  if (window.innerWidth >= 1280) {
-    isNavbarOpen.value = false
-  }
-}
-
-// Lifecycle
-onMounted(() => {
-  window.addEventListener('resize', handleResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
-})
-</script>
 
 <style scoped>
 /* Navbar transition */
