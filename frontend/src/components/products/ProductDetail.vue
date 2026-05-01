@@ -2,20 +2,22 @@
 import { useRoute } from 'vue-router'
 import { products } from '@/data/Products'
 import { useStockStatus } from '@/composables/useStockStatus'
-import { computed } from 'vue'
+import { computed, watchEffect } from 'vue'
 import router from '@/router'
 import MainButton from '../ui/MainButton.vue'
 
 const route = useRoute()
-const product = products.find((p) => p.id === Number(route.params.id))
+const product = computed(() => products.find((p) => p.id === Number(route.params.id)))
 
-if (!product) router.push({ name: 'home' })
+watchEffect(() => {
+  if (!product.value) router.push({ name: 'home' })
+})
 
 const getImageUrl = (image: string) => {
   return new URL(`../../assets/products/${image}`, import.meta.url).href
 }
 
-const { stockLabel, stockClasses } = useStockStatus(computed(() => product?.stock ?? 0))
+const { stockLabel, stockClasses } = useStockStatus(computed(() => product.value?.stock ?? 0))
 </script>
 
 <template>
