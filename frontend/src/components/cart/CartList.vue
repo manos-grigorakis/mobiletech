@@ -25,11 +25,13 @@ const getImageUrl = (image: string) => {
         class="flex gap-4 p-4 border-b border-neutral-100 last:border-0"
       >
         <!-- Image -->
-        <img
-          :src="getImageUrl(item.image)"
-          :alt="`${item.name} image`"
-          class="object-contain w-24 h-24"
-        />
+        <RouterLink :to="{ name: 'product-details', params: { id: item.id } }">
+          <img
+            :src="getImageUrl(item.image)"
+            :alt="`${item.name} image`"
+            class="object-contain w-24 h-24"
+          />
+        </RouterLink>
 
         <!-- Content -->
         <div class="flex flex-col justify-between flex-1">
@@ -39,7 +41,9 @@ const getImageUrl = (image: string) => {
             >
 
             <div class="flex items-start justify-between">
-              <h3 class="text-lg font-medium">{{ item.name }}</h3>
+              <RouterLink :to="{ name: 'product-details', params: { id: item.id } }">
+                <h3 class="text-lg font-medium hover:underline">{{ item.name }}</h3>
+              </RouterLink>
               <Trash2
                 @click="cart.removeFromCart(item.id)"
                 class="w-5 h-5 text-gray-400 transition-colors duration-300 hover:cursor-pointer hover:text-red-500"
