@@ -3,6 +3,7 @@ import type { Product } from '@/types/product'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useStockStatus } from '@/composables/useStockStatus'
+import MainButton from './MainButton.vue'
 
 const { product } = defineProps<{ product: Product }>()
 
@@ -39,12 +40,7 @@ const { stockLabel, stockClasses } = useStockStatus(computed(() => product.stock
         >{{ product.price }}€</span
       >
 
-      <button
-        :disabled="product.stock === 0"
-        class="w-full px-4 py-2 mt-4 text-white transition-colors duration-300 rounded-md disabled:cursor-not-allowed disabled:bg-gray-500 bg-primary-600 hover:cursor-pointer hover:bg-primary-700"
-      >
-        Add to cart
-      </button>
+      <MainButton title="Add to cart" :disabled="product.stock === 0" />
     </div>
   </RouterLink>
 </template>
