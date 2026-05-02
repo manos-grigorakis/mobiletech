@@ -40,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse createCategory(CategoryRequest dto) {
-        Category category = CategoryMapper.toModel(dto);
+        Category category = CategoryMapper.toEntity(dto);
         validateUnique(category.getName(), category.getSlug(), category.getId());
 
         Category savedCategory = categoryRepository.save(category);

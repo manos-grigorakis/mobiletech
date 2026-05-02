@@ -5,8 +5,8 @@ import com.mgrigorakis.mobiletech.dto.CategoryResponse;
 import com.mgrigorakis.mobiletech.model.Category;
 
 public class CategoryMapper {
-    // DTO -> Model
-    public static Category toModel(CategoryRequest dto) {
+    // DTO -> Entity
+    public static Category toEntity(CategoryRequest dto) {
         return Category.builder()
                 .name(dto.name())
                 .slug(dto.slug())
