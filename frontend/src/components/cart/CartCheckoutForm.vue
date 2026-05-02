@@ -50,7 +50,7 @@ const { value: paymentMethodValue } = useField('paymentMethod')
 
 const onSubmit = handleSubmit((data) => {
   cart.clearCart()
-  router.push('/')
+  router.push({ name: 'order-success' })
 })
 </script>
 
