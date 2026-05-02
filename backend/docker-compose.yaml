@@ -1,0 +1,17 @@
+name: mobiletech-dev
+
+services:
+  db:
+    image: mysql:9
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: mobiletech
+    env_file:
+      - .env
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
