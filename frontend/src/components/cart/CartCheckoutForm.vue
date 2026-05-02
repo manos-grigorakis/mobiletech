@@ -30,7 +30,7 @@ const formSchema = toTypedSchema(
   }),
 )
 
-const { handleSubmit } = useForm({
+const { handleSubmit, isSubmitting } = useForm({
   validationSchema: formSchema,
   initialValues: {
     firstName: '',
@@ -48,9 +48,9 @@ const { handleSubmit } = useForm({
 const { value: countryValue, errorMessage: countryError } = useField('country')
 const { value: paymentMethodValue } = useField('paymentMethod')
 
-const onSubmit = handleSubmit((data) => {
-  cart.clearCart()
-  router.push({ name: 'order-success' })
+const onSubmit = handleSubmit(async (data) => {
+  cart.placeOrder()
+  await router.push({ name: 'order-success' })
 })
 </script>
 
@@ -81,7 +81,7 @@ const onSubmit = handleSubmit((data) => {
         input-id="email"
         input-type="email"
         :required="true"
-        placeholder="e.g. john.doe@example.com"
+        placeholder="e.g. john.doe@gmail.com"
       />
 
       <!-- Phone -->
@@ -179,7 +179,10 @@ const onSubmit = handleSubmit((data) => {
           >
         </div>
       </div>
-      <MainButton title="Complete Order" />
+      <MainButton
+        :disabled="isSubmitting"
+        :title="isSubmitting ? 'Processing...' : 'Complete Order'"
+      />
     </form>
   </div>
 </template>

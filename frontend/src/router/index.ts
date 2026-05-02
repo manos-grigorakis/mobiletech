@@ -1,3 +1,4 @@
+import { useCartStore } from '@/stores/cart'
 import HomeView from '@/views/HomeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -29,11 +30,19 @@ const router = createRouter({
           path: 'checkout',
           name: 'cart-checkout',
           component: () => import('@/components/cart/CartCheckoutForm.vue'),
+          beforeEnter: () => {
+            const cart = useCartStore()
+            if (cart.totalItems === 0) return { name: 'cart-list' }
+          },
         },
         {
           path: 'success',
           name: 'order-success',
           component: () => import('@/components/cart/OrderSuccess.vue'),
+          beforeEnter: () => {
+            const cart = useCartStore()
+            if (!cart.orderPlaced) return { name: 'cart-list' }
+          },
         },
       ],
     },
