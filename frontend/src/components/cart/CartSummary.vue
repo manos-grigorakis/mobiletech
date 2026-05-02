@@ -43,7 +43,7 @@ const cart = useCartStore()
     </div>
 
     <MainButton
-      v-if="route.name !== 'cart-checkout'"
+      v-if="route.name === 'cart-list'"
       @click="router.push({ name: 'cart-checkout' })"
       :disabled="cart.totalItems === 0"
       title="Proceed to Checkout"
