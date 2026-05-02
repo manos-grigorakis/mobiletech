@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Field Validation Failed",
-                null,
+                "FIELD_VALIDATION_FAILED",
                 details
         );
 
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
-                ex.getErrorCode(),
+                null,
                 null
         );
 
