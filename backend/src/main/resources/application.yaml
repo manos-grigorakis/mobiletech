@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: mobiletech
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:3306/mobiletech
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+
+app:
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS}
