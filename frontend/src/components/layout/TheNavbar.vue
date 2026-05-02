@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { ShoppingCartIcon } from '@lucide/vue'
-import { useCartStore } from '@/stores/cart'
-
-const cart = useCartStore()
+import CartIcon from '../ui/CartIcon.vue'
 
 const isNavbarOpen = ref(false)
 const navLinks: { label: string; path: string; query?: Record<string, string> }[] = [
@@ -55,28 +52,33 @@ onUnmounted(() => {
         >
       </div>
 
-      <!-- Open mobile navbar -->
-      <button
-        type="button"
-        class="-m-2.5 md:hidden inline-flex items-center justify-center hover:cursor-pointer rounded-md p-2.5"
-        @click="toggleNavbar"
-      >
-        <span class="sr-only">Open main menu</span>
-        <svg
-          class="w-10 h-10"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="white"
-          aria-hidden="true"
+      <div class="flex items-center gap-4">
+        <!-- Cart -->
+        <CartIcon @click="closeNavbar" class="md:hidden" />
+
+        <!-- Open mobile navbar -->
+        <button
+          type="button"
+          class="-m-2.5 md:hidden inline-flex items-center justify-center hover:cursor-pointer rounded-md p-2.5"
+          @click="toggleNavbar"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-          />
-        </svg>
-      </button>
+          <span class="sr-only">Open main menu</span>
+          <svg
+            class="w-10 h-10"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="white"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+        </button>
+      </div>
 
       <!-- Nav links -->
       <div class="hidden md:flex md:gap-x-10">
@@ -93,18 +95,7 @@ onUnmounted(() => {
         </ul>
 
         <!-- Cart -->
-        <RouterLink :to="{ name: 'cart-list' }" class="relative">
-          <ShoppingCartIcon
-            class="transition-colors duration-300 hover:text-accent-500 hover:cursor-pointer"
-          />
-
-          <span
-            v-if="cart.totalItems > 0"
-            class="absolute -top-2 -right-2 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-accent-600 rounded-full"
-          >
-            {{ cart.totalItems > 99 ? '99+' : cart.totalItems }}
-          </span>
-        </RouterLink>
+        <CartIcon @click="closeNavbar" />
       </div>
     </div>
 
@@ -120,18 +111,7 @@ onUnmounted(() => {
 
         <div class="flex items-center gap-4">
           <!-- Cart -->
-          <RouterLink :to="{ name: 'cart-list' }" class="relative" @click="closeNavbar">
-            <ShoppingCartIcon
-              class="transition-colors duration-300 hover:text-accent-500 hover:cursor-pointer"
-            />
-
-            <span
-              v-if="cart.totalItems > 0"
-              class="absolute -top-2 -right-2 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-accent-600 rounded-full"
-            >
-              {{ cart.totalItems > 99 ? '99+' : cart.totalItems }}
-            </span>
-          </RouterLink>
+          <CartIcon @click="closeNavbar" />
 
           <!-- Mobile close button navbar -->
           <button
