@@ -11,3 +11,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+app:
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS}
