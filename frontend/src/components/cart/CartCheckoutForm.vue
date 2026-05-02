@@ -58,7 +58,7 @@ const onSubmit = handleSubmit(async (data) => {
   <div class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-sm">
     <form @submit="onSubmit" class="flex flex-col gap-4">
       <!-- Names -->
-      <div class="flex gap-2">
+      <div class="flex flex-col gap-4 md:gap-2 md:flex-row">
         <MainInput
           label-value="First Name"
           input-id="firstName"
@@ -94,7 +94,7 @@ const onSubmit = handleSubmit(async (data) => {
 
       <!-- Shipping -->
       <div class="mt-4">
-        <div class="flex gap-2">
+        <div class="flex flex-col gap-4 md:flex-row md:gap-2">
           <!-- Address -->
           <MainInput
             label-value="Street Address"
@@ -114,7 +114,7 @@ const onSubmit = handleSubmit(async (data) => {
           />
         </div>
 
-        <div class="flex gap-2 mt-4">
+        <div class="flex flex-col gap-4 mt-4 md:gap-2 md:flex-row">
           <!-- Postal Code -->
           <MainInput
             label-value="Postal Code / ZIP"
