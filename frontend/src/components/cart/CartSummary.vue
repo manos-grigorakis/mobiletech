@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useCartStore } from '@/stores/cart'
 import MainButton from '../ui/MainButton.vue'
+import router from '@/router'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const cart = useCartStore()
 </script>
 
@@ -39,6 +42,11 @@ const cart = useCartStore()
       </div>
     </div>
 
-    <MainButton title="Proceed to Checkout" />
+    <MainButton
+      v-if="route.name === 'cart-list'"
+      @click="router.push({ name: 'cart-checkout' })"
+      :disabled="cart.totalItems === 0"
+      title="Proceed to Checkout"
+    />
   </div>
 </template>

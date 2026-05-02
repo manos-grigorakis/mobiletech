@@ -96,7 +96,7 @@ const getImageUrl = (image: string) => {
     <!-- Empty Cart -->
     <div v-else class="flex flex-col items-center gap-3 py-16 text-center text-gray-400">
       <p class="text-gray-400">Your cart is empty.</p>
-      <RouterLink to="/" class="text-sm text-primary-600 hover:underline"
+      <RouterLink :to="{ name: 'products' }" class="text-sm text-primary-600 hover:underline"
         >Browse products</RouterLink
       >
     </div>

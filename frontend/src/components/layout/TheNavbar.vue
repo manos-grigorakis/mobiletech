@@ -93,7 +93,7 @@ onUnmounted(() => {
         </ul>
 
         <!-- Cart -->
-        <RouterLink :to="{ name: 'cart' }" class="relative">
+        <RouterLink :to="{ name: 'cart-list' }" class="relative">
           <ShoppingCartIcon
             class="transition-colors duration-300 hover:text-accent-500 hover:cursor-pointer"
           />
@@ -120,7 +120,7 @@ onUnmounted(() => {
 
         <div class="flex items-center gap-4">
           <!-- Cart -->
-          <RouterLink :to="{ name: 'cart' }" class="relative" @click="closeNavbar">
+          <RouterLink :to="{ name: 'cart-list' }" class="relative" @click="closeNavbar">
             <ShoppingCartIcon
               class="transition-colors duration-300 hover:text-accent-500 hover:cursor-pointer"
             />

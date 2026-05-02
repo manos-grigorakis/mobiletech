@@ -1,3 +1,4 @@
+import { useCartStore } from '@/stores/cart'
 import HomeView from '@/views/HomeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -7,7 +8,7 @@ const router = createRouter({
     { path: '/', name: 'home', component: HomeView },
 
     // Products
-    { path: '/products', component: () => import('@/views/ProductsView.vue') },
+    { path: '/products', name: 'products', component: () => import('@/views/ProductsView.vue') },
     {
       path: '/products/:id',
       name: 'product-details',
@@ -15,7 +16,36 @@ const router = createRouter({
     },
 
     // Cart
-    { path: '/cart', name: 'cart', component: () => import('@/views/CartView.vue') },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: () => import('@/views/CartView.vue'),
+      children: [
+        {
+          path: '',
+          name: 'cart-list',
+          component: () => import('@/components/cart/CartList.vue'),
+        },
+        {
+          path: 'checkout',
+          name: 'cart-checkout',
+          component: () => import('@/components/cart/CartCheckoutForm.vue'),
+          beforeEnter: () => {
+            const cart = useCartStore()
+            if (cart.totalItems === 0) return { name: 'cart-list' }
+          },
+        },
+        {
+          path: 'success',
+          name: 'order-success',
+          component: () => import('@/components/cart/OrderSuccess.vue'),
+          beforeEnter: () => {
+            const cart = useCartStore()
+            if (!cart.orderPlaced) return { name: 'cart-list' }
+          },
+        },
+      ],
+    },
   ],
 })
 
