@@ -21,25 +21,23 @@ public class ProductController {
     @GetMapping
     public ApiResponse<Page<ProductResponse>> getAllProducts(
             @ModelAttribute @Valid PageFilterRequest filterRequest, @ModelAttribute PageSortRequest sortRequest) {
-        return new ApiResponse<>(null, productService.getAllProducts(filterRequest, sortRequest),
-                                 null, null);
+        return new ApiResponse<>(productService.getAllProducts(filterRequest, sortRequest));
     }
 
     @GetMapping("/{id}")
     public ApiResponse<ProductResponse> getProductById(@PathVariable Long id) {
-        return new ApiResponse<>(null, productService.getProductById(id), null, null);
+        return new ApiResponse<>(productService.getProductById(id));
     }
 
     @PostMapping
     public ApiResponse<ProductResponse> createProduct(@RequestBody @Valid  ProductRequest productRequest) {
-        return new ApiResponse<>(null, productService.createProduct(productRequest),
-                                 null, null);
+        return new ApiResponse<>(productService.createProduct(productRequest));
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<ProductResponse> updateProductById(@PathVariable Long id,
-            @RequestBody @Valid  ProductRequest productRequest) {
-        return new ApiResponse<>(null, productService.updateProductById(id, productRequest), null, null);
+    public ApiResponse<ProductResponse> updateProductById(
+            @PathVariable Long id, @RequestBody @Valid  ProductRequest productRequest) {
+        return new ApiResponse<>(productService.updateProductById(id, productRequest));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

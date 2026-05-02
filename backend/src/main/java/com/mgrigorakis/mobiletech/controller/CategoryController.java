@@ -19,25 +19,23 @@ public class CategoryController {
 
     @GetMapping
     public ApiResponse<List<CategoryResponse>> getAllCategories() {
-        return new ApiResponse<>(null, categoryService.getAllCategories(), null, null);
+        return new ApiResponse<>(categoryService.getAllCategories());
     }
 
     @GetMapping("/{id}")
     public ApiResponse<CategoryResponse> getCategoryById(@PathVariable Long id) {
-        return new ApiResponse<>(null, categoryService.getCategoryById(id), null, null);
+        return new ApiResponse<>(categoryService.getCategoryById(id));
     }
 
     @PostMapping
     public ApiResponse<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest categoryRequest) {
-        return new ApiResponse<>(null, categoryService.createCategory(categoryRequest),
-                                 null, null);
+        return new ApiResponse<>(categoryService.createCategory(categoryRequest));
     }
 
     @PutMapping("/{id}")
     public ApiResponse<CategoryResponse> updateCategoryById(
             @PathVariable Long id, @RequestBody @Valid CategoryRequest categoryRequest) {
-        return new ApiResponse<>(null, categoryService.updateCategoryById(id, categoryRequest),
-                                 null, null);
+        return new ApiResponse<>(categoryService.updateCategoryById(id, categoryRequest));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

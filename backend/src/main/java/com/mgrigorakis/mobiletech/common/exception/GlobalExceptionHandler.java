@@ -30,10 +30,8 @@ public class GlobalExceptionHandler {
                 details
         );
 
-        return new ResponseEntity<>(
-                new ApiResponse<>(null, null, null, errorResponse), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse<>(errorResponse), HttpStatus.BAD_REQUEST);
     }
-
 
     // Not Found - 404
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -46,8 +44,7 @@ public class GlobalExceptionHandler {
         );
 
         log.error(ex.getMessage());
-        return new ResponseEntity<>(
-                new ApiResponse<>(null, null, null, errorResponse), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ApiResponse<>(errorResponse), HttpStatus.NOT_FOUND);
     }
 
     // Conflict Exception Error - 409
@@ -61,8 +58,7 @@ public class GlobalExceptionHandler {
         );
 
         log.error(ex.getMessage());
-        return new ResponseEntity<>(
-                new ApiResponse<>(null, null, null, errorResponse), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ApiResponse<>(errorResponse), HttpStatus.CONFLICT);
     }
 
     // Server Error - 500
@@ -76,8 +72,6 @@ public class GlobalExceptionHandler {
         );
 
         log.error(ex.getMessage());
-        return new ResponseEntity<>(
-                new ApiResponse<>(null, null, null, errorResponse),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ApiResponse<>(errorResponse), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

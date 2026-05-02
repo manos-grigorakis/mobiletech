@@ -16,4 +16,12 @@ public record ApiResponse<T>(
         if (transaction == null) transaction = UUID.randomUUID().toString();
         if (timestamp == null) timestamp = new Date();
     }
+
+    public ApiResponse(T data) {
+        this(null, data, null, null);
+    }
+
+    public ApiResponse(ErrorResponse error) {
+        this(null, null, null, error);
+    }
 }
