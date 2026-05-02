@@ -16,7 +16,7 @@ public class CategoryMapper {
     // Model -> Response
     public static CategoryResponse toResponse(Category category) {
         return new CategoryResponse(
-                category.getId(), category.getName(), category.getName(), category.getCreatedAt(),
+                category.getId(), category.getName(), category.getSlug(), category.getCreatedAt(),
                 category.getUpdatedAt());
     }
 }
