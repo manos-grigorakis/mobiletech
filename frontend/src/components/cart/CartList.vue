@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { products } from '@/data/Products'
 import { useCartStore } from '@/stores/cart'
 import { Plus, Minus, Trash2 } from '@lucide/vue'
 
