@@ -8,10 +8,6 @@ import { useCartItem } from '@/composables/useCartItem'
 
 const { product } = defineProps<{ product: Product }>()
 
-const getImageUrl = (image: String) => {
-  return new URL(`../../assets/products/${image}`, import.meta.url).href
-}
-
 const { stockLabel, stockClasses } = useStockStatus(computed(() => product.stock))
 const { isDisabled, isMaxStock, addToCart } = useCartItem(product)
 </script>
@@ -22,7 +18,7 @@ const { isDisabled, isMaxStock, addToCart } = useCartItem(product)
       <!-- Image -->
       <div>
         <img
-          :src="getImageUrl(product.image)"
+          :src="product.imageUrl"
           :alt="`${product.name} image`"
           class="w-auto h-40 mx-auto rounded-md"
         />
@@ -31,7 +27,7 @@ const { isDisabled, isMaxStock, addToCart } = useCartItem(product)
       <!-- Content -->
       <div class="flex flex-col mt-6 grow">
         <span class="text-sm text-gray-500 capitalize"
-          >{{ product.brand }} • {{ product.category }}</span
+          >{{ product.brand }} • {{ product.category.name }}</span
         >
         <h3 class="mt-1 text-lg font-medium">{{ product.name }}</h3>
         <span :class="stockClasses" class="text-xs font-medium tracking-wide">{{

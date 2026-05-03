@@ -1,31 +1,36 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { products } from '@/data/Products'
 import { useStockStatus } from '@/composables/useStockStatus'
-import { computed, watchEffect } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import router from '@/router'
 import MainButton from '../ui/MainButton.vue'
 import { useCartItem } from '@/composables/useCartItem'
+import { useProductStore } from '@/stores/product'
+import { storeToRefs } from 'pinia'
 
 const route = useRoute()
-const product = computed(() => products.find((p) => p.id === Number(route.params.id)))
+const productStore = useProductStore()
+const productId: number = Number(route.params.id)
 
-watchEffect(() => {
-  if (!product.value) router.push({ name: 'home' })
+const { product } = storeToRefs(productStore)
+const productRef = computed(() => product.value ?? undefined)
+
+const { stockLabel, stockClasses } = useStockStatus(computed(() => productRef?.value?.stock ?? 0))
+const { isDisabled, isMaxStock, addToCart } = useCartItem(productRef)
+
+onMounted(() => {
+  productStore.fetchProduct(productId)
 })
 
-const getImageUrl = (image: string) => {
-  return new URL(`../../assets/products/${image}`, import.meta.url).href
-}
-
-const { stockLabel, stockClasses } = useStockStatus(computed(() => product.value?.stock ?? 0))
-const { isDisabled, isMaxStock, addToCart } = useCartItem(product)
+watch(product, (val) => {
+  if (val === null && !productStore.isLoading) router.push({ name: 'home' })
+})
 </script>
 
 <template>
   <section v-if="product" class="max-w-4xl px-6 mx-auto mt-24">
     <p class="mb-6 text-xs tracking-widest text-gray-400 uppercase">
-      {{ product.category }}
+      {{ product.category.name }}
     </p>
 
     <div class="grid items-center grid-cols-1 gap-10 md:grid-cols-2">
@@ -34,7 +39,7 @@ const { isDisabled, isMaxStock, addToCart } = useCartItem(product)
         class="flex items-center justify-center overflow-hidden rounded-xl bg-neutral-100 aspect-4/5"
       >
         <img
-          :src="getImageUrl(product.image)"
+          :src="product.imageUrl"
           :alt="`${product.name} image`"
           class="object-contain w-full h-full"
         />
@@ -63,7 +68,7 @@ const { isDisabled, isMaxStock, addToCart } = useCartItem(product)
         <div class="flex flex-col gap-2 pt-4 text-sm border-t border-neutral-200">
           <div class="flex justify-between">
             <span class="text-neutral-400">Category</span>
-            <span class="capitalize">{{ product.category }}</span>
+            <span class="capitalize">{{ product.category.name }}</span>
           </div>
           <div class="flex justify-between">
             <span class="text-neutral-400">Brand</span>

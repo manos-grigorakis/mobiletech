@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import ProductCard from '@/components/ui/ProductCard.vue'
 import SectionWrapper from '@/components/ui/SectionWrapper.vue'
-import { products } from '@/data/Products'
-import { computed } from 'vue'
+import { useProductStore } from '@/stores/product'
+import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+const productStore = useProductStore()
 
 const selectedCategory = computed(() => {
   return route.query.category as string | undefined
 })
 
-// Filter products based on category
-const filteredProducts = computed(() => {
-  if (!selectedCategory.value) return products
+const fetchProducts = (category?: string | null) => {
+  productStore.fetchProducts({ size: 12, page: 0, category: category ?? null })
+}
 
-  return products.filter((product) => product.category === selectedCategory.value)
+onMounted(() => {
+  fetchProducts(selectedCategory.value)
 })
+
+watch(selectedCategory, (val) => fetchProducts(val))
 </script>
 
 <template>
@@ -26,7 +30,7 @@ const filteredProducts = computed(() => {
     </div>
 
     <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-      <ProductCard v-for="product in filteredProducts" :key="product.id" :product="product" />
+      <ProductCard v-for="product in productStore.products" :key="product.id" :product="product" />
     </div>
   </SectionWrapper>
 </template>
