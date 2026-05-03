@@ -21,8 +21,9 @@ public class ProductController {
 
     @GetMapping
     public ApiResponse<Page<ProductResponse>> getAllProducts(
-            @ModelAttribute @Valid PageFilterRequest filterRequest, @ModelAttribute PageSortRequest sortRequest) {
-        return new ApiResponse<>(productService.getAllProducts(filterRequest, sortRequest));
+            @ModelAttribute @Valid PageFilterRequest filterRequest, @ModelAttribute PageSortRequest sortRequest,
+            @RequestParam(name = "category", required = false) String category) {
+        return new ApiResponse<>(productService.getAllProducts(filterRequest, sortRequest, category));
     }
 
     @GetMapping("/{id}")

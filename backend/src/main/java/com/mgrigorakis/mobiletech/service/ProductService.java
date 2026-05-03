@@ -7,7 +7,7 @@ import com.mgrigorakis.mobiletech.dto.ProductResponse;
 import org.springframework.data.domain.Page;
 
 public interface ProductService {
-    Page<ProductResponse> getAllProducts(PageFilterRequest filterRequest, PageSortRequest sortRequest);
+    Page<ProductResponse> getAllProducts(PageFilterRequest filterRequest, PageSortRequest sortRequest, String category);
 
     ProductResponse getProductById(Long id);
 

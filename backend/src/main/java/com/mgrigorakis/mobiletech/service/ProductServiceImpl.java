@@ -38,9 +38,12 @@ public class ProductServiceImpl  implements ProductService {
     private String bucketPrefixProducts;
 
     @Override
-    public Page<ProductResponse> getAllProducts(PageFilterRequest filterRequest, PageSortRequest sortRequest) {
+    public Page<ProductResponse> getAllProducts(
+            PageFilterRequest filterRequest, PageSortRequest sortRequest, String category) {
         Pageable pageable = PageRequest.of(filterRequest.page(), filterRequest.size(), sortRequest.createSort());
-        Page<Product> productPage = productRepository.findAll(pageable);
+        Page<Product> productPage = (category != null && !category.isBlank())
+                ? productRepository.findProductByCategory_Slug(category, pageable)
+                : productRepository.findAll(pageable);
 
         return productPage.map(product -> {
             String imageUrl = fileStorageService.getUrl(bucketPrefixProducts, product.getImageKey());
