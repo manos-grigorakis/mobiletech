@@ -21,7 +21,13 @@ management:
     health:
       show-details: never
 
-
 app:
   cors:
     allowed-origins: ${ALLOWED_ORIGINS}
+  storage:
+    region: ${STORAGE_REGION}
+    access-key: ${STORAGE_ACCESS_KEY}
+    secret-key: ${STORAGE_SECRET_KEY}
+    endpoint: ${STORAGE_ENDPOINT}
+    bucket-name: ${STORAGE_BUCKET_NAME}
+    bucket-prefix-products: ${STORAGE_BUCKET_PREFIX_PRODUCTS}
