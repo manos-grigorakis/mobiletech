@@ -6,7 +6,7 @@ const isNavbarOpen = ref(false)
 const navLinks: { label: string; path: string; query?: Record<string, string> }[] = [
   { label: 'All', path: '/products' },
   { label: 'smartphones', path: '/products', query: { category: 'smartphones' } },
-  { label: 'refurbished', path: '/products', query: { category: 'refurbished' } },
+  { label: 'refurbished', path: '/products', query: { category: 'refurbished-phones' } },
   { label: 'accessories', path: '/products', query: { category: 'accessories' } },
   { label: 'deals', path: '/deals' },
   { label: 'support', path: '/support' },
