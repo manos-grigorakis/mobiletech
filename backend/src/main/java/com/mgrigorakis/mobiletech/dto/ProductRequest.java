@@ -2,6 +2,7 @@ package com.mgrigorakis.mobiletech.dto;
 
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -24,10 +25,8 @@ public record ProductRequest(
         Integer stock,
         String description,
 
-        @NotBlank(message = "Image URL is required")
-        @Size(max = 500)
-        @URL
-        String imageUrl,
+        @NotNull(message = "Image is required")
+        MultipartFile image,
 
         @NotNull(message = "Category ID is required")
         Long categoryId

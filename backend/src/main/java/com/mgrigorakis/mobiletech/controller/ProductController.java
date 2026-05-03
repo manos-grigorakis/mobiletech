@@ -30,13 +30,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ApiResponse<ProductResponse> createProduct(@RequestBody @Valid  ProductRequest productRequest) {
+    public ApiResponse<ProductResponse> createProduct(@ModelAttribute @Valid ProductRequest productRequest) {
         return new ApiResponse<>(productService.createProduct(productRequest));
     }
 
     @PutMapping("/{id}")
     public ApiResponse<ProductResponse> updateProductById(
-            @PathVariable Long id, @RequestBody @Valid  ProductRequest productRequest) {
+            @PathVariable Long id, @ModelAttribute @Valid ProductRequest productRequest) {
         return new ApiResponse<>(productService.updateProductById(id, productRequest));
     }
 

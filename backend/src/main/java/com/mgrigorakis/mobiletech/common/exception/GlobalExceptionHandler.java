@@ -33,6 +33,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ApiResponse<>(errorResponse), HttpStatus.BAD_REQUEST);
     }
 
+    // Bad Request Error - 400
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiResponse<Void>> handleBadRequestException(BadRequestException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                ex.getErrorCode(),
+                null
+        );
+
+        return new ResponseEntity<>(new ApiResponse<>(errorResponse), HttpStatus.BAD_REQUEST);
+    }
+
     // Not Found - 404
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleResourceNotFoundException(ResourceNotFoundException ex) {
