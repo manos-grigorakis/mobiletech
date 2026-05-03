@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -29,8 +30,8 @@ public class Product extends BaseModel {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "image_url", nullable = false , length = 500)
-    private String imageUrl;
+    @Column(name = "image_key", nullable = false, length = 200)
+    private String imageKey;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
