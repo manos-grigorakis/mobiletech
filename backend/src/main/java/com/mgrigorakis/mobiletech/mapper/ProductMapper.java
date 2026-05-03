@@ -15,12 +15,11 @@ public class ProductMapper {
                 .price(dto.price())
                 .stock(dto.stock())
                 .description(dto.description())
-                .imageUrl(dto.imageUrl())
                 .category(category)
                 .build();
     }
 
-    public static ProductResponse toResponse(Product product) {
+    public static ProductResponse toResponse(Product product, String imageUrl) {
         Category category = product.getCategory();
         CategorySummaryResponse categorySummary = new CategorySummaryResponse(
                 category.getId(), category.getName(), category.getSlug());
@@ -32,7 +31,7 @@ public class ProductMapper {
                 product.getPrice(),
                 product.getStock(),
                 product.getDescription(),
-                product.getImageUrl(),
+                imageUrl,
                 product.getCreatedAt(),
                 product.getUpdatedAt(),
                 categorySummary

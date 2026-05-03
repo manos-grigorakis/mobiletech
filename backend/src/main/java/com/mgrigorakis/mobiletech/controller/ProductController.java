@@ -8,11 +8,12 @@ import com.mgrigorakis.mobiletech.dto.ProductResponse;
 import com.mgrigorakis.mobiletech.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -30,13 +31,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ApiResponse<ProductResponse> createProduct(@RequestBody @Valid  ProductRequest productRequest) {
+    public ApiResponse<ProductResponse> createProduct(@ModelAttribute @Valid ProductRequest productRequest) {
         return new ApiResponse<>(productService.createProduct(productRequest));
     }
 
     @PutMapping("/{id}")
     public ApiResponse<ProductResponse> updateProductById(
-            @PathVariable Long id, @RequestBody @Valid  ProductRequest productRequest) {
+            @PathVariable Long id, @ModelAttribute @Valid ProductRequest productRequest) {
         return new ApiResponse<>(productService.updateProductById(id, productRequest));
     }
 

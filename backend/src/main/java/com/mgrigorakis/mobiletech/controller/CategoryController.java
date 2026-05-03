@@ -6,12 +6,13 @@ import com.mgrigorakis.mobiletech.dto.CategoryResponse;
 import com.mgrigorakis.mobiletech.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
