@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { useStockStatus } from '@/composables/useStockStatus'
-import { computed, onMounted, watch } from 'vue'
+import { computed, watch } from 'vue'
 import router from '@/router'
 import MainButton from '../ui/MainButton.vue'
 import { useCartItem } from '@/composables/useCartItem'
@@ -10,7 +10,6 @@ import { storeToRefs } from 'pinia'
 
 const route = useRoute()
 const productStore = useProductStore()
-const productId: number = Number(route.params.id)
 
 const { product } = storeToRefs(productStore)
 const productRef = computed(() => product.value ?? undefined)
@@ -18,9 +17,13 @@ const productRef = computed(() => product.value ?? undefined)
 const { stockLabel, stockClasses } = useStockStatus(computed(() => productRef?.value?.stock ?? 0))
 const { isDisabled, isMaxStock, addToCart } = useCartItem(productRef)
 
-onMounted(() => {
-  productStore.fetchProduct(productId)
-})
+watch(
+  () => route.params.id,
+  (id) => {
+    productStore.fetchProduct(Number(id))
+  },
+  { immediate: true },
+)
 
 watch(product, (val) => {
   if (val === null && !productStore.isLoading) router.push({ name: 'home' })
