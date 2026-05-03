@@ -3,10 +3,6 @@ import { useCartStore } from '@/stores/cart'
 import { Plus, Minus, Trash2 } from '@lucide/vue'
 
 const cart = useCartStore()
-
-const getImageUrl = (image: string) => {
-  return new URL(`../../assets/products/${image}`, import.meta.url).href
-}
 </script>
 
 <template>
@@ -26,18 +22,14 @@ const getImageUrl = (image: string) => {
       >
         <!-- Image -->
         <RouterLink :to="{ name: 'product-details', params: { id: item.id } }">
-          <img
-            :src="getImageUrl(item.image)"
-            :alt="`${item.name} image`"
-            class="object-contain w-24 h-24"
-          />
+          <img :src="item.imageUrl" :alt="`${item.name} image`" class="object-contain w-24 h-24" />
         </RouterLink>
 
         <!-- Content -->
         <div class="flex flex-col justify-between flex-1">
           <div>
             <span class="block mb-1 text-xs text-gray-500 capitalize"
-              >{{ item.category }} • {{ item.brand }}</span
+              >{{ item.category.name }} • {{ item.brand }}</span
             >
 
             <div class="flex items-start justify-between">
