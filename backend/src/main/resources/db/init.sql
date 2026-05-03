@@ -96,12 +96,12 @@ VALUES
     (NOW(), 'Vivo', 'Vivo X90 Pro premium camera focused phone', '039a1f57-3bca-4104-8bbb-0b2ae0efbfcd.webp',
      'Vivo X90 Pro 256GB Black', 899.00, 9, 1),
     (NOW(), 'Vivo', 'Vivo V29 midrange performance and design', '20f30370-be18-4d29-8cf2-2d77a733b9cb.webp',
-     'Vivo V29 256GB Blue', 449.00, 17, 1),
+     'Vivo V29 256GB Black', 449.00, 17, 1),
 
     -- ** Refurbished phones **
     -- Apple
     (NOW(), 'Apple', 'Refurbished iPhone 13 128GB Grade A, battery health ≥90%',
-     'e9dbe424-2359-4899-b6d0-d1361de4fbe4.webp', 'Refurbished iPhone 13 128GB Black (Grade A)',
+     '717d4095-d55b-427d-b600-d0128cf613b3.webp', 'Refurbished iPhone 13 128GB Black (Grade A)',
      519.00, 12, 2),
     (NOW(), 'Apple', 'Refurbished iPhone 12 128GB Grade A, fully tested',
      '46344256-ef10-40b8-b27f-658f1d3bc913.webp', 'Refurbished iPhone 12 128GB White (Grade A)',
@@ -110,7 +110,7 @@ VALUES
      '06e5aa81-de2a-4f8d-9ab6-71b970a76683.webp', 'Refurbished iPhone 11 64GB Black (Grade B)', 299.00,
      15, 2),
     (NOW(), 'Apple', 'Refurbished iPhone SE 2020 64GB Grade B, compact device',
-     '53d03cc9-566a-4cdd-8e2e-e430c1ee6ec2.webp', 'Refurbished iPhone SE 2020 64GB Red (Grade B)',
+     'd8f208e0-be6b-4bd8-ba5e-9eb26fd990e8.webp', 'Refurbished iPhone SE 2020 64GB Red (Grade B)',
      179.00, 20, 2),
 
     -- Samsung
@@ -286,37 +286,37 @@ VALUES
      60, 8),
 
     (NOW(), 'ESR', 'ESR Clear Tempered Glass for iPhone 14 with easy installation kit',
-     'f03d4b82-201d-4674-85cc-5d17aaaa456b.webp', 'ESR Tempered Glass for iPhone 14', 9.99, 70, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'ESR Tempered Glass for iPhone 14', 9.99, 70, 8),
 
     (NOW(), 'Nillkin', 'Nillkin Privacy Screen Protector for iPhone 13 anti-spy',
-     '20924164-e1ae-4d03-9f9a-fabdd559a2d0.webp', 'Nillkin Privacy Glass for iPhone 13', 14.49, 40, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'Nillkin Privacy Glass for iPhone 13', 14.49, 40, 8),
 
     (NOW(), 'Baseus', 'Baseus Full Glue Tempered Glass for iPhone 12 edge-to-edge coverage',
-     'b8308b47-4293-48df-ab09-41f2e0ff6eff.webp', 'Baseus Full Glue Glass for iPhone 12', 11.99, 50, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'Baseus Full Glue Glass for iPhone 12', 11.99, 50, 8),
 
     -- Samsung
     (NOW(), 'Spigen', 'Spigen NeoFlex flexible screen protector for Galaxy S24',
-     '8f506813-b351-4349-9456-999c141378e6.webp', 'Spigen NeoFlex for Galaxy S24', 13.99, 45, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'Spigen NeoFlex for Galaxy S24', 13.99, 45, 8),
 
     (NOW(), 'ESR', 'ESR Tempered Glass for Galaxy S23 with scratch resistance',
-     '5352dc59-d5b4-467b-be5e-8b7bac46976e.webp', 'ESR Tempered Glass for Galaxy S23', 9.49, 55, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'ESR Tempered Glass for Galaxy S23', 9.49, 55, 8),
 
     (NOW(), 'Nillkin', 'Nillkin Privacy Glass for Galaxy S22 anti-spy protection',
-     'f226b8e6-09d2-4759-b106-581b3877a202.webp', 'Nillkin Privacy Glass for Galaxy S22', 13.99, 38, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'Nillkin Privacy Glass for Galaxy S22', 13.99, 38, 8),
 
     (NOW(), 'Baseus', 'Baseus Tempered Glass for Galaxy A54 durable protection',
-     '66fb0847-98f3-4906-8a04-bc4d4987f887.webp', 'Baseus Tempered Glass for Galaxy A54', 8.99, 65, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'Baseus Tempered Glass for Galaxy A54', 8.99, 65, 8),
 
     -- Xiaomi
     (NOW(), 'Nillkin', 'Nillkin Tempered Glass for Xiaomi 13 with oleophobic coating',
-     '53f87b53-c584-48e7-8b9e-1b0e1ee06a76.webp', 'Nillkin Tempered Glass for Xiaomi 13', 10.49, 42, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'Nillkin Tempered Glass for Xiaomi 13', 10.49, 42, 8),
 
     (NOW(), 'Baseus', 'Baseus Privacy Screen Protector for Redmi Note 12',
-     '1d91bce8-b351-4772-be28-25c45b9060e3.webp', 'Baseus Privacy Glass for Redmi Note 12', 9.99, 48, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'Baseus Privacy Glass for Redmi Note 12', 9.99, 48, 8),
 
     -- Universal / extra
     (NOW(), 'Spigen', 'Spigen EZ Fit Tempered Glass with installation frame for iPhone 15 Pro',
-     'ed5431a3-79e9-44c7-b60a-b95a14603be6.webp', 'Spigen EZ Fit Glass for iPhone 15 Pro', 15.99, 35, 8),
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'Spigen EZ Fit Glass for iPhone 15 Pro', 15.99, 35, 8),
 
     (NOW(), 'ESR', 'ESR 3-pack tempered glass universal fit for 6.5 inch displays',
-     '72d047a7-ef79-46e4-9946-4cd0d4325dfe.webp', 'ESR Universal Tempered Glass 6.5"', 7.99, 80, 8);
+     '16f0d67e-259f-47f1-88b2-451bb71b8e15.webp', 'ESR Universal Tempered Glass 6.5"', 7.99, 80, 8);
