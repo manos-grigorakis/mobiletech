@@ -8,11 +8,12 @@ import com.mgrigorakis.mobiletech.dto.ProductResponse;
 import com.mgrigorakis.mobiletech.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
