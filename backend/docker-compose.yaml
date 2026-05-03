@@ -8,9 +8,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: mobiletech
-    env_file:
-      - .env
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - mysql_data:/var/lib/mysql
 
