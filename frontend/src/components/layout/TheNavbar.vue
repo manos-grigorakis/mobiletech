@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import CartIcon from '../ui/CartIcon.vue'
 
+const scrolled = ref(false)
 const isNavbarOpen = ref(false)
 const navLinks: { label: string; path: string; query?: Record<string, string> }[] = [
   { label: 'All', path: '/products' },
@@ -29,18 +30,28 @@ const handleResize = () => {
   }
 }
 
+const onScroll = () => {
+  scrolled.value = window.scrollY > 40
+}
+
 // Lifecycle
 onMounted(() => {
+  onScroll()
   window.addEventListener('resize', handleResize)
+  window.addEventListener('scroll', onScroll)
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
+  window.removeEventListener('scroll', onScroll)
 })
 </script>
 
 <template>
-  <nav ref="desktopNav" class="fixed z-50 w-full p-4 text-white bg-primary-800">
+  <nav
+    :class="scrolled ? 'mt-0' : 'mt-9'"
+    class="fixed z-40 w-full p-4 text-white bg-primary-800 transition-all duration-300"
+  >
     <!-- Desktop -->
     <div class="flex items-center justify-between md:justify-around">
       <!-- Logo -->
@@ -100,7 +111,11 @@ onUnmounted(() => {
     </div>
 
     <!-- Mobile -->
-    <div v-if="isNavbarOpen" class="fixed inset-0 z-50 px-6 py-6 text-white bg-primary-800">
+    <div
+      v-if="isNavbarOpen"
+      :class="scrolled ? 'mt-0' : 'mt-9'"
+      class="fixed inset-0 z-50 px-4 py-6 text-white bg-primary-800"
+    >
       <!-- Header -->
       <div class="flex items-center justify-between">
         <RouterLink to="/"
@@ -140,7 +155,7 @@ onUnmounted(() => {
           <li
             v-for="link in navLinks"
             :key="link.label"
-            class="px-6 py-2 capitalize cursor-pointer hover:text-accent-500"
+            class="py-2 capitalize cursor-pointer hover:text-accent-500"
           >
             <RouterLink :to="{ path: link.path, query: link.query }" @click="closeNavbar">{{
               link.label
