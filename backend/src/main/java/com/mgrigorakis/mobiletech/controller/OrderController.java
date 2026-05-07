@@ -5,6 +5,7 @@ import com.mgrigorakis.mobiletech.common.dto.PageFilterRequest;
 import com.mgrigorakis.mobiletech.common.dto.PageSortRequest;
 import com.mgrigorakis.mobiletech.dto.OrderRequest;
 import com.mgrigorakis.mobiletech.dto.OrderResponse;
+import com.mgrigorakis.mobiletech.dto.OrderStatusUpdateRequest;
 import com.mgrigorakis.mobiletech.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,11 @@ public class OrderController {
     @PostMapping
     public ApiResponse<OrderResponse> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
         return new ApiResponse<>(orderService.createOrder(orderRequest));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ApiResponse<OrderResponse> updateOrderStatusById(
+            @PathVariable Long id, @RequestBody @Valid OrderStatusUpdateRequest orderStatusRequest) {
+        return new ApiResponse<>(orderService.updateOrderStatusById(id, orderStatusRequest));
     }
 }

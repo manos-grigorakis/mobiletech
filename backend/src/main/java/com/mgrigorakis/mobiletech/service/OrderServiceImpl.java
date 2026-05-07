@@ -5,6 +5,7 @@ import com.mgrigorakis.mobiletech.common.dto.PageSortRequest;
 import com.mgrigorakis.mobiletech.common.exception.ResourceNotFoundException;
 import com.mgrigorakis.mobiletech.dto.OrderRequest;
 import com.mgrigorakis.mobiletech.dto.OrderResponse;
+import com.mgrigorakis.mobiletech.dto.OrderStatusUpdateRequest;
 import com.mgrigorakis.mobiletech.mapper.OrderMapper;
 import com.mgrigorakis.mobiletech.model.Order;
 import com.mgrigorakis.mobiletech.model.OrderItem;
@@ -59,6 +60,19 @@ public class OrderServiceImpl implements OrderService {
         Order order = OrderMapper.toEntity(orderRequest, orderItems);
         order.calculateTotalAmount();
         order.setOrderStatus(OrderStatus.PROCESSING);
+        Order savedOrder = orderRepository.save(order);
+
+        return OrderMapper.toResponse(savedOrder);
+    }
+
+    @Override
+    public OrderResponse updateOrderStatusById(Long id, OrderStatusUpdateRequest orderStatusRequest) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> {
+            log.warn("No order found with id {}", id);
+            return new ResourceNotFoundException("No order found with id " + id);
+        });
+
+        order.setOrderStatus(orderStatusRequest.status());
         Order savedOrder = orderRepository.save(order);
 
         return OrderMapper.toResponse(savedOrder);
