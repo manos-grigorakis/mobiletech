@@ -3,10 +3,8 @@ package com.mgrigorakis.mobiletech.service;
 import com.mgrigorakis.mobiletech.common.dto.PageFilterRequest;
 import com.mgrigorakis.mobiletech.common.dto.PageSortRequest;
 import com.mgrigorakis.mobiletech.common.exception.ResourceNotFoundException;
-import com.mgrigorakis.mobiletech.dto.OrderItemSummaryResponse;
 import com.mgrigorakis.mobiletech.dto.OrderRequest;
 import com.mgrigorakis.mobiletech.dto.OrderResponse;
-import com.mgrigorakis.mobiletech.dto.PaymentTransactionResponse;
 import com.mgrigorakis.mobiletech.mapper.OrderMapper;
 import com.mgrigorakis.mobiletech.model.Order;
 import com.mgrigorakis.mobiletech.model.OrderItem;
@@ -35,19 +33,7 @@ public class OrderServiceImpl implements OrderService {
         Pageable pageable = PageRequest.of(filter.page(), filter.size(), sort.createSort());
         Page<Order> orders = orderRepository.findAll(pageable);
 
-        return orders.map(order -> {
-            List<OrderItemSummaryResponse> orderItems = order.getOrderItems()
-                    .stream()
-                    .map(OrderMapper::toResponse)
-                    .toList();
-
-            List<PaymentTransactionResponse> paymentTransactions = order.getPaymentTransactions()
-                    .stream()
-                    .map(OrderMapper::toResponse)
-                    .toList();
-
-            return OrderMapper.toResponse(order, orderItems, paymentTransactions);
-        });
+        return orders.map(OrderMapper::toResponse);
     }
 
     @Override
@@ -57,13 +43,7 @@ public class OrderServiceImpl implements OrderService {
            return new ResourceNotFoundException("No order found with id " + id);
         });
 
-        List<OrderItemSummaryResponse> orderItemSummaryResponse = order.getOrderItems().stream().map(
-                OrderMapper::toResponse).toList();
-
-        List<PaymentTransactionResponse> paymentTransactions = order.getPaymentTransactions().stream().map(
-                OrderMapper::toResponse).toList();
-
-        return OrderMapper.toResponse(order, orderItemSummaryResponse, paymentTransactions);
+        return OrderMapper.toResponse(order);
     }
 
     @Override
@@ -81,8 +61,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus(OrderStatus.PROCESSING);
         Order savedOrder = orderRepository.save(order);
 
-        List<OrderItemSummaryResponse> orderItemSummaryResponse = orderItems.stream().map(
-                OrderMapper::toResponse).toList();
-        return OrderMapper.toResponse(savedOrder, orderItemSummaryResponse, List.of());
+        return OrderMapper.toResponse(savedOrder);
     }
 }

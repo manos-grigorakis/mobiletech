@@ -36,22 +36,27 @@ public class OrderMapper {
     }
 
     // Entity -> Response
-    public static OrderResponse toResponse(Order order, List<OrderItemSummaryResponse> orderItems,
-                                           List<PaymentTransactionResponse> paymentTransactions) {
+    public static OrderResponse toResponse(Order order) {
         return new OrderResponse(order.getId(), order.getOrderStatus(), order.getFirstName(), order.getLastName(),
                                  order.getEmail(), order.getPhone(), order.getAddress(), order.getCity(),
                                  order.getPostalCode(), order.getCountry(), order.getTotalAmount(),
                                  order.getCreatedAt(),
-                                 order.getUpdatedAt(), orderItems, paymentTransactions);
+                                 order.getUpdatedAt(), toOrderItemSummaryResponse(order.getOrderItems()),
+                                 toPaymentTransactionResponse(order.getPaymentTransactions()));
     }
 
-    public static OrderItemSummaryResponse toResponse(OrderItem orderItem) {
-        return new OrderItemSummaryResponse(orderItem.getId(), orderItem.getPrice(), orderItem.getQuantity(),
-                                            orderItem.getProduct().getId());
+    private static List<OrderItemSummaryResponse> toOrderItemSummaryResponse(List<OrderItem> orderItems) {
+        return orderItems.stream().map(
+                orderItem -> new OrderItemSummaryResponse(orderItem.getId(), orderItem.getPrice(),
+                                                          orderItem.getQuantity(),
+                                                          orderItem.getProduct().getId())).toList();
     }
 
-    public static PaymentTransactionResponse toResponse(PaymentTransaction paymentTransaction) {
-        return new PaymentTransactionResponse(paymentTransaction.getId(), paymentTransaction.getPaymentProvider(),
-                                              paymentTransaction.getPaymentStatus(), paymentTransaction.getAmount());
+    private static List<PaymentTransactionResponse> toPaymentTransactionResponse(
+            List<PaymentTransaction> paymentTransactions) {
+        return paymentTransactions.stream().map(
+                transaction -> new PaymentTransactionResponse(transaction.getId(), transaction.getPaymentProvider(),
+                                                              transaction.getPaymentStatus(),
+                                                              transaction.getAmount())).toList();
     }
 }
