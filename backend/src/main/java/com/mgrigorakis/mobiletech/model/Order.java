@@ -48,9 +48,30 @@ public class Order extends BaseModel {
     @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus;
 
+    @Builder.Default
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentTransaction> paymentTransactions = new ArrayList<>();
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+    /**
+     * Calculates and sets the {@link #totalAmount} of the {@link Order},
+     * by multiplying the price and quantity of each {@link OrderItem}
+     */
+    public void calculateTotalAmount() {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (OrderItem orderItem : orderItems) {
+            BigDecimal itemTotal = orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity()));
+            total = total.add(itemTotal);
+        }
+        this.totalAmount = total;
+    }
 }

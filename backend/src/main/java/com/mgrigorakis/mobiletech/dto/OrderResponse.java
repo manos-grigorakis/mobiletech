@@ -1,5 +1,6 @@
 package com.mgrigorakis.mobiletech.dto;
 
+import com.mgrigorakis.mobiletech.model.enums.OrderStatus;
 import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
 
 import java.math.BigDecimal;
@@ -8,6 +9,7 @@ import java.util.List;
 
 public record OrderResponse(
         Long id,
+        OrderStatus orderStatus,
         String firstName,
         String lastName,
         String email,
