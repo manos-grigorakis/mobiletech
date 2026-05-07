@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum OrderStatus {
     PENDING("pending"),
+    CONFIRMED("confirmed"),
+    PAYMENT_FAILED("payment_failed"),
     PROCESSING("processing"),
     SHIPPED("shipped"),
     DELIVERED("delivered"),

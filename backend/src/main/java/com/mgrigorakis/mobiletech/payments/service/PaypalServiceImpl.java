@@ -1,14 +1,23 @@
 package com.mgrigorakis.mobiletech.payments.service;
 
 import com.mgrigorakis.mobiletech.common.exception.BadGatewayException;
+import com.mgrigorakis.mobiletech.dto.OrderStatusUpdateRequest;
+import com.mgrigorakis.mobiletech.model.PaymentTransaction;
+import com.mgrigorakis.mobiletech.model.enums.OrderStatus;
+import com.mgrigorakis.mobiletech.model.enums.PaymentProvider;
+import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
 import com.mgrigorakis.mobiletech.payments.dto.PaypalCaptureResponse;
 import com.mgrigorakis.mobiletech.payments.dto.PaypalOrderRequest;
 import com.mgrigorakis.mobiletech.payments.dto.PaypalOrderResponse;
+import com.mgrigorakis.mobiletech.repository.PaymentTransactionRepository;
+import com.mgrigorakis.mobiletech.service.OrderService;
+import com.mgrigorakis.mobiletech.service.PaymentTransactionService;
 import com.paypal.sdk.PaypalServerSdkClient;
 import com.paypal.sdk.controllers.OrdersController;
 import com.paypal.sdk.exceptions.ErrorException;
 import com.paypal.sdk.http.response.ApiResponse;
 import com.paypal.sdk.models.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +32,8 @@ import java.util.concurrent.CompletionException;
 @Service
 public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, PaypalCaptureResponse> {
     private final PaypalServerSdkClient paypalClient;
+    private final PaymentTransactionService paymentTransactionService;
+    private final OrderService orderService;
 
     @Value("${app.payments.paypal.redirect-url}")
     private String paypalReturnUrl;
@@ -52,7 +63,7 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
 
         try {
             ApiResponse<Order> response = ordersController.createOrderAsync(createOrderInput).join();
-
+            log.info("Creating Paypal Order Response: {}", response.getResult());
             Order result = response.getResult();
             String approveUrl = result.getLinks().stream()
                     .filter(link -> "approve".equals(link.getRel()))
@@ -66,12 +77,13 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
         }
     }
 
+    @Transactional
     @Override
     public PaypalCaptureResponse captureOrder(String orderId) {
         OrdersController ordersController = paypalClient.getOrdersController();
 
         CaptureOrderInput captureOrderInput = new CaptureOrderInput.Builder(
-                orderId, null).prefer("return=minimal").build();
+                orderId, null).prefer("return=representation").build();
 
         try {
             ApiResponse<Order> response = ordersController.captureOrderAsync(captureOrderInput).join();
@@ -81,16 +93,26 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
             String customId = purchaseUnit.getCustomId();
             SellerReceivableBreakdown breakdown = purchaseUnit.getPayments().getCaptures().getFirst()
                     .getSellerReceivableBreakdown();
+            BigDecimal grossAmount = new BigDecimal(breakdown.getGrossAmount().getValue());
+            BigDecimal providerFee = new BigDecimal(breakdown.getPaypalFee().getValue());
+            BigDecimal netAmount = new BigDecimal(breakdown.getNetAmount().getValue());
 
             log.info("PayPal captured order with custom id: {} and status: {}", customId, result.getStatus().toString());
 
-            return new PaypalCaptureResponse(
-                    customId,
-                    result.getStatus().toString(),
-                    new BigDecimal(breakdown.getGrossAmount().getValue()),
-                    new BigDecimal(breakdown.getPaypalFee().getValue()),
-                    new BigDecimal(breakdown.getNetAmount().getValue())
-            );
+            PaymentTransaction transaction = PaymentTransaction.builder()
+                    .paymentProvider(PaymentProvider.PAYPAL)
+                    .paymentStatus(PaymentStatus.PAID)
+                    .grossAmount(grossAmount)
+                    .providerFeeAmount(providerFee)
+                    .netAmount(netAmount)
+                    .build();
+
+            paymentTransactionService.createPaymentTransaction(Long.parseLong(customId), transaction);
+            orderService.updateOrderStatusById(
+                    Long.parseLong(customId), new OrderStatusUpdateRequest(OrderStatus.CONFIRMED));
+
+            return new PaypalCaptureResponse(customId, result.getStatus().toString(), grossAmount, providerFee,
+                                             netAmount);
         } catch (CompletionException e) {
             throw handlePaypalException(e);
         }

@@ -54,9 +54,8 @@ public class OrderMapper {
 
     private static List<PaymentTransactionResponse> toPaymentTransactionResponse(
             List<PaymentTransaction> paymentTransactions) {
-        return paymentTransactions.stream().map(
-                transaction -> new PaymentTransactionResponse(transaction.getId(), transaction.getPaymentProvider(),
-                                                              transaction.getPaymentStatus(),
-                                                              transaction.getAmount())).toList();
+        return paymentTransactions.stream().map(transaction -> new PaymentTransactionResponse(
+                transaction.getId(), transaction.getPaymentProvider(), transaction.getPaymentStatus(),
+                transaction.getGrossAmount(), transaction.getProviderFeeAmount(), transaction.getNetAmount())).toList();
     }
 }

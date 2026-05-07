@@ -24,8 +24,14 @@ public class PaymentTransaction extends BaseModel {
     @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus;
 
-    @Column(name = "amount", nullable = false, scale = 2, precision = 19)
-    private BigDecimal amount;
+    @Column(name = "gross_amount", nullable = false, scale = 2, precision = 19)
+    private BigDecimal grossAmount;
+
+    @Column(name = "provider_fee_amount", nullable = false, scale = 2, precision = 19)
+    private BigDecimal providerFeeAmount;
+
+    @Column(name = "net_amount", nullable = false, scale = 2, precision = 19)
+    private BigDecimal netAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)

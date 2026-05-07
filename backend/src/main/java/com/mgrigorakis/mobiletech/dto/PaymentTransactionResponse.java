@@ -9,5 +9,7 @@ public record PaymentTransactionResponse(
         Long id,
         PaymentProvider paymentProvider,
         PaymentStatus paymentStatus,
-        BigDecimal amount
+        BigDecimal grossAmount,
+        BigDecimal providerFeeAmount,
+        BigDecimal netAmount
 ) {}
