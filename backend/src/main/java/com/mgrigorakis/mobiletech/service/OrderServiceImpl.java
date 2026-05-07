@@ -1,9 +1,12 @@
 package com.mgrigorakis.mobiletech.service;
 
+import com.mgrigorakis.mobiletech.common.dto.PageFilterRequest;
+import com.mgrigorakis.mobiletech.common.dto.PageSortRequest;
 import com.mgrigorakis.mobiletech.common.exception.ResourceNotFoundException;
 import com.mgrigorakis.mobiletech.dto.OrderItemSummaryResponse;
 import com.mgrigorakis.mobiletech.dto.OrderRequest;
 import com.mgrigorakis.mobiletech.dto.OrderResponse;
+import com.mgrigorakis.mobiletech.dto.PaymentTransactionResponse;
 import com.mgrigorakis.mobiletech.mapper.OrderMapper;
 import com.mgrigorakis.mobiletech.model.Order;
 import com.mgrigorakis.mobiletech.model.OrderItem;
@@ -13,6 +16,9 @@ import com.mgrigorakis.mobiletech.repository.OrderRepository;
 import com.mgrigorakis.mobiletech.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +29,42 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+
+    @Override
+    public Page<OrderResponse> getOrders(PageSortRequest sort, PageFilterRequest filter) {
+        Pageable pageable = PageRequest.of(filter.page(), filter.size(), sort.createSort());
+        Page<Order> orders = orderRepository.findAll(pageable);
+
+        return orders.map(order -> {
+            List<OrderItemSummaryResponse> orderItems = order.getOrderItems()
+                    .stream()
+                    .map(OrderMapper::toResponse)
+                    .toList();
+
+            List<PaymentTransactionResponse> paymentTransactions = order.getPaymentTransactions()
+                    .stream()
+                    .map(OrderMapper::toResponse)
+                    .toList();
+
+            return OrderMapper.toResponse(order, orderItems, paymentTransactions);
+        });
+    }
+
+    @Override
+    public OrderResponse getOrderById(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> {
+           log.warn("No order found with id {}", id);
+           return new ResourceNotFoundException("No order found with id " + id);
+        });
+
+        List<OrderItemSummaryResponse> orderItemSummaryResponse = order.getOrderItems().stream().map(
+                OrderMapper::toResponse).toList();
+
+        List<PaymentTransactionResponse> paymentTransactions = order.getPaymentTransactions().stream().map(
+                OrderMapper::toResponse).toList();
+
+        return OrderMapper.toResponse(order, orderItemSummaryResponse, paymentTransactions);
+    }
 
     @Override
     public OrderResponse createOrder(OrderRequest orderRequest) {

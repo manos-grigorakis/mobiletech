@@ -3,6 +3,7 @@ package com.mgrigorakis.mobiletech.mapper;
 import com.mgrigorakis.mobiletech.dto.*;
 import com.mgrigorakis.mobiletech.model.Order;
 import com.mgrigorakis.mobiletech.model.OrderItem;
+import com.mgrigorakis.mobiletech.model.PaymentTransaction;
 import com.mgrigorakis.mobiletech.model.Product;
 
 import java.util.List;
@@ -47,5 +48,10 @@ public class OrderMapper {
     public static OrderItemSummaryResponse toResponse(OrderItem orderItem) {
         return new OrderItemSummaryResponse(orderItem.getId(), orderItem.getPrice(), orderItem.getQuantity(),
                                             orderItem.getProduct().getId());
+    }
+
+    public static PaymentTransactionResponse toResponse(PaymentTransaction paymentTransaction) {
+        return new PaymentTransactionResponse(paymentTransaction.getId(), paymentTransaction.getPaymentProvider(),
+                                              paymentTransaction.getPaymentStatus(), paymentTransaction.getAmount());
     }
 }
