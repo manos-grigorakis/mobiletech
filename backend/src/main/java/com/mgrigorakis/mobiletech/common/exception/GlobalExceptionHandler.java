@@ -74,6 +74,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ApiResponse<>(errorResponse), HttpStatus.CONFLICT);
     }
 
+    // Bad Gateway - 502
+    @ExceptionHandler(BadGatewayException.class)
+    public ResponseEntity<ApiResponse<Void>> handleBadGatewayException(BadGatewayException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_GATEWAY.value(),
+                ex.getMessage(),
+                ex.getErrorCode(),
+                null
+        );
+
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(new ApiResponse<>(errorResponse), HttpStatus.BAD_GATEWAY);
+    }
+
     // Server Error - 500
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception ex) {
