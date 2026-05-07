@@ -31,3 +31,10 @@ app:
     endpoint: ${STORAGE_ENDPOINT}
     bucket-name: ${STORAGE_BUCKET_NAME}
     bucket-prefix-products: ${STORAGE_BUCKET_PREFIX_PRODUCTS}
+  payments:
+    paypal:
+      client-id: ${PAYMENT_PAYPAL_CLIENT_ID}
+      client-secret: ${PAYMENT_PAYPAL_CLIENT_SECRET}
+      mode: ${PAYMENT_PAYPAL_MODE}
+      redirect-url: ${PAYMENT_PAYPAL_REDIRECT_URL}
+      cancel-url: ${PAYMENT_PAYPAL_CANCEL_URL}

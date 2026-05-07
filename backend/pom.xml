@@ -29,6 +29,7 @@
     <properties>
         <java.version>21</java.version>
         <aws.s3.version>2.42.41</aws.s3.version>
+        <paypal.version>2.0.0</paypal.version>
     </properties>
     <dependencies>
         <dependency>
@@ -77,6 +78,14 @@
             <version>${aws.s3.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- Payments -->
+        <dependency>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>paypal-server-sdk</artifactId>
+            <version>${paypal.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
