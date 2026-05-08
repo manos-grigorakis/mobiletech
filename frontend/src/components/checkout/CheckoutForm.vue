@@ -63,15 +63,15 @@ const onSubmit = handleSubmit(async (data) => {
       }
     } else {
       await payment.createPayment(payload)
+      if (payment.hasError) isProcessing.value = false
     }
-  } catch (e) {
+  } catch {
     isProcessing.value = false
   }
 })
 
 onMounted(() => {
   payment.stripeClientKey = null
-  payment.showStripeForm = false
 })
 </script>
 

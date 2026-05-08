@@ -62,6 +62,7 @@ const onSubmit = handleSubmit(async (data) => {
   }
 
   await order.createOrder(payload)
+  if (order.hasError) return
   await router.push({ name: 'checkout-payment' })
 })
 </script>

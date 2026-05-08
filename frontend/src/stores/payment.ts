@@ -3,6 +3,7 @@ import { PaymentProvider } from '@/types/payment-provider'
 import type { PaymentRequest } from '@/types/payment-request'
 import axios from 'axios'
 import { defineStore } from 'pinia'
+import { useUiStore } from './ui'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -11,7 +12,7 @@ export const usePaymentStore = defineStore('payment', {
     paymentProvider: null as PaymentProvider | null,
     isLoading: false as boolean,
     stripeClientKey: null as string | null,
-    error: null as string | null,
+    hasError: false as boolean,
   }),
 
   persist: {
@@ -21,6 +22,7 @@ export const usePaymentStore = defineStore('payment', {
   actions: {
     async createPayment(payload: PaymentRequest) {
       this.isLoading = true
+      this.hasError = false
 
       try {
         const res = await axios.post(`${API_URL}/payments/create`, payload)
@@ -38,8 +40,9 @@ export const usePaymentStore = defineStore('payment', {
             break
         }
       } catch (e) {
-        console.error('Failed to create payment', e)
-        this.error = 'Failed to create payment. Please try again'
+        const ui = useUiStore()
+        ui.setError('Failed to create payment. Please try again')
+        this.hasError = true
       } finally {
         this.isLoading = false
       }
