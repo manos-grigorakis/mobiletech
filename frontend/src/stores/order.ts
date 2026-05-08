@@ -11,6 +11,8 @@ export const useOrderStore = defineStore('order', {
     error: null as string | null,
   }),
 
+  persist: true,
+
   actions: {
     async createOrder(payload: OrderRequest) {
       this.isLoading = true
