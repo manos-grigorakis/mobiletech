@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CartSummary from '@/components/cart/CartSummary.vue'
+import TestCredentials from '@/components/checkout/TestCredentials.vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -15,6 +16,8 @@ const route = useRoute()
     >
       <div class="order-2 lg:col-span-2 lg:order-1">
         <router-view />
+
+        <TestCredentials v-if="route.name === 'checkout-payment'" />
       </div>
 
       <div

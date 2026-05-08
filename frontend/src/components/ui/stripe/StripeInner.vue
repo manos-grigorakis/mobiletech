@@ -15,12 +15,14 @@ const confirm = async (clientSecret: string) => {
 
   if (result.error) {
     console.error(result.error.message)
+    emit('error')
   } else if (result.paymentIntent?.status === 'succeeded') {
     router.push({ name: 'checkout-success' })
   }
   return result
 }
 
+const emit = defineEmits<{ error: [] }>()
 defineExpose({ confirm })
 </script>
 

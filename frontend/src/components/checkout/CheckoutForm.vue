@@ -126,6 +126,7 @@ onMounted(() => {
           v-if="payment.stripeClientKey"
           ref="stripeFormRef"
           :client-secret="payment.stripeClientKey"
+          @error="isProcessing = false"
         />
         <p v-else class="text-sm text-gray-400">Select Credit Card and click continue to proceed</p>
       </div>

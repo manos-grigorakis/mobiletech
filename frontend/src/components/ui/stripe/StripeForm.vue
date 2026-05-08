@@ -15,15 +15,17 @@ const elementOptions = {
     billingDetails: 'never',
   },
 }
+
+const emit = defineEmits<{ error: [] }>()
 const confirm = async (clientSecret: string) => innerRef.value?.confirm(clientSecret)
 
-defineExpose({ confirm })
+defineExpose({ confirm, emit })
 </script>
 
 <template>
   <VueStripeProvider :publishable-key="publishableKey">
     <VueStripeElements :client-secret="clientSecret" :options="elementOptions">
-      <StripeInner ref="innerRef" />
+      <StripeInner ref="innerRef" @error="emit('error')" />
     </VueStripeElements>
   </VueStripeProvider>
 </template>
