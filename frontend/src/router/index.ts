@@ -1,4 +1,5 @@
 import { useCartStore } from '@/stores/cart'
+import { useOrderStore } from '@/stores/order'
 import HomeView from '@/views/HomeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -33,16 +34,28 @@ const router = createRouter({
           path: '',
           name: 'checkout-shipping',
           component: () => import('@/components/checkout/ShippingForm.vue'),
+          beforeEnter: () => {
+            const cart = useCartStore()
+            if (cart.items.length === 0) return { name: 'cart' }
+          },
         },
         {
           path: 'payment',
           name: 'checkout-payment',
           component: () => import('@/components/checkout/CheckoutForm.vue'),
+          beforeEnter: () => {
+            const order = useOrderStore()
+            if (!order.orderId) return { name: 'checkout-shipping' }
+          },
         },
         {
           path: 'success',
           name: 'checkout-success',
           component: () => import('@/components/checkout/OrderSuccess.vue'),
+          beforeEnter: () => {
+            const order = useOrderStore()
+            if (!order.orderId) return { name: 'cart' }
+          },
         },
       ],
     },

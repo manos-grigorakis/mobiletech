@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
 import { useField, useForm } from 'vee-validate'
-import z from 'zod'
-import MainButton from '../ui/MainButton.vue'
 import { useOrderStore } from '@/stores/order'
 import { usePaymentStore } from '@/stores/payment'
 import { PaymentProvider } from '@/types/payment-provider'
 import type { PaymentRequest } from '@/types/payment-request'
+import { computed, onMounted, ref } from 'vue'
 import router from '@/router'
+import StripeForm from '../ui/stripe/StripeForm.vue'
+import z from 'zod'
+import MainButton from '../ui/MainButton.vue'
 
 const order = useOrderStore()
 const payment = usePaymentStore()
@@ -22,24 +24,54 @@ const formSchema = toTypedSchema(
   }),
 )
 
-const { handleSubmit, isSubmitting } = useForm({
+const { handleSubmit } = useForm({
   validationSchema: formSchema,
 })
 
-const { value: paymentMethodValue } = useField('paymentMethod')
+const stripeButtonTitle = computed(() => {
+  if (paymentMethodValue.value === PaymentProvider.STRIPE && !payment.stripeClientKey) {
+    return 'Continue'
+  }
+  return 'Complete Order'
+})
+
+const { value: paymentMethodValue } = useField<PaymentProvider>('paymentMethod')
+const stripeFormRef = ref<InstanceType<typeof StripeForm> | null>(null)
+const isProcessing = ref<boolean>(false)
 
 const onSubmit = handleSubmit(async (data) => {
-  if (order.orderId === null) {
-    router.push({ name: 'checkout-shipping' })
-    return
-  }
+  isProcessing.value = true
 
-  const payload: PaymentRequest = {
-    orderId: order.orderId,
-    paymentProvider: data.paymentMethod,
-  }
+  try {
+    if (order.orderId === null) {
+      router.push({ name: 'checkout-shipping' })
+      return
+    }
 
-  await payment.createPayment(payload)
+    const payload: PaymentRequest = {
+      orderId: order.orderId,
+      paymentProvider: data.paymentMethod,
+    }
+
+    if (data.paymentMethod === PaymentProvider.STRIPE) {
+      if (!payment.stripeClientKey) {
+        // Create payment to show Stripe form
+        await payment.createPayment(payload)
+        isProcessing.value = false
+      } else {
+        await stripeFormRef.value?.confirm(payment.stripeClientKey!)
+      }
+    } else {
+      await payment.createPayment(payload)
+    }
+  } catch (e) {
+    isProcessing.value = false
+  }
+})
+
+onMounted(() => {
+  payment.stripeClientKey = null
+  payment.showStripeForm = false
 })
 </script>
 
@@ -48,7 +80,7 @@ const onSubmit = handleSubmit(async (data) => {
     <form @submit="onSubmit" class="flex flex-col gap-4">
       <!-- Payment -->
       <div>
-        <p class="block mb-1"><span class="mr-1 text-xs text-red-500">*</span>Payment</p>
+        <p class="mb-2"><span class="mr-1 text-xs text-red-500">*</span>Payment</p>
 
         <!-- Cash on delivery -->
         <div>
@@ -64,7 +96,7 @@ const onSubmit = handleSubmit(async (data) => {
         </div>
 
         <!-- PayPal -->
-        <div>
+        <div class="my-1">
           <input
             type="radio"
             id="paypal"
@@ -76,24 +108,31 @@ const onSubmit = handleSubmit(async (data) => {
         </div>
 
         <!-- Credit card -->
-        <div class="my-1">
+        <div>
           <input
             type="radio"
             id="stripe"
             v-model="paymentMethodValue"
             value="stripe"
             class="mr-1"
-            disabled
           />
-          <label for="stripe" class="text-gray-400 line-through cursor-not-allowed"
-            >Credit Card</label
-          >
+          <label for="stripe">Credit Card</label>
         </div>
       </div>
 
+      <!-- Stripe form -->
+      <div v-if="paymentMethodValue === PaymentProvider.STRIPE">
+        <StripeForm
+          v-if="payment.stripeClientKey"
+          ref="stripeFormRef"
+          :client-secret="payment.stripeClientKey"
+        />
+        <p v-else class="text-sm text-gray-400">Select Credit Card and click continue to proceed</p>
+      </div>
+
       <MainButton
-        :disabled="isSubmitting"
-        :title="isSubmitting ? 'Processing...' : 'Complete Order'"
+        :disabled="isProcessing || payment.isLoading"
+        :title="isProcessing || payment.isLoading ? 'Processing...' : stripeButtonTitle"
       />
     </form>
   </div>

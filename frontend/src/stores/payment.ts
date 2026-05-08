@@ -10,8 +10,14 @@ export const usePaymentStore = defineStore('payment', {
   state: () => ({
     paymentProvider: null as PaymentProvider | null,
     isLoading: false as boolean,
+    stripeClientKey: null as string | null,
+    showStripeForm: false as boolean,
     error: null as string | null,
   }),
+
+  persist: {
+    pick: ['paymentProvider'],
+  },
 
   actions: {
     async createPayment(payload: PaymentRequest) {
@@ -29,7 +35,8 @@ export const usePaymentStore = defineStore('payment', {
             window.location.href = res.data.data.approveUrl
             break
           case PaymentProvider.STRIPE:
-            // TODO: Create Stripe form
+            this.showStripeForm = true
+            this.stripeClientKey = res.data.data.clientSecret
             break
         }
       } catch (e) {
