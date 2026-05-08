@@ -5,12 +5,11 @@ import com.mgrigorakis.mobiletech.dto.OrderResponse;
 import com.mgrigorakis.mobiletech.dto.OrderStatusUpdateRequest;
 import com.mgrigorakis.mobiletech.model.PaymentTransaction;
 import com.mgrigorakis.mobiletech.model.enums.OrderStatus;
-import com.mgrigorakis.mobiletech.model.enums.PaymentProvider;
+import com.mgrigorakis.mobiletech.model.enums.PaymentProviderType;
 import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
 import com.mgrigorakis.mobiletech.payments.dto.PaypalCaptureResponse;
 import com.mgrigorakis.mobiletech.payments.dto.PaypalOrderRequest;
 import com.mgrigorakis.mobiletech.payments.dto.PaypalOrderResponse;
-import com.mgrigorakis.mobiletech.repository.PaymentTransactionRepository;
 import com.mgrigorakis.mobiletech.service.OrderService;
 import com.mgrigorakis.mobiletech.service.PaymentTransactionService;
 import com.paypal.sdk.PaypalServerSdkClient;
@@ -103,7 +102,7 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
             log.info("PayPal captured order with custom id: {} and status: {}", customId, result.getStatus().toString());
 
             PaymentTransaction transaction = PaymentTransaction.builder()
-                    .paymentProvider(PaymentProvider.PAYPAL)
+                    .paymentProvider(PaymentProviderType.PAYPAL)
                     .paymentStatus(PaymentStatus.PAID)
                     .grossAmount(grossAmount)
                     .providerFeeAmount(providerFee)

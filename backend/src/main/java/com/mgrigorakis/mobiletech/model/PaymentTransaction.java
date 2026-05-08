@@ -1,6 +1,6 @@
 package com.mgrigorakis.mobiletech.model;
 
-import com.mgrigorakis.mobiletech.model.enums.PaymentProvider;
+import com.mgrigorakis.mobiletech.model.enums.PaymentProviderType;
 import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 public class PaymentTransaction extends BaseModel {
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_provider", nullable = false)
-    private PaymentProvider paymentProvider;
+    private PaymentProviderType paymentProvider;
 
     @Column(name = "provider_transaction_id")
     private String providerTransactionId;

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PaymentProvider {
+public enum PaymentProviderType {
     CASH_ON_DELIVERY("cash_on_delivery"),
     STRIPE("stripe"),
     PAYPAL("paypal");

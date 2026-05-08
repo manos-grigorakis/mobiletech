@@ -6,7 +6,7 @@ import com.mgrigorakis.mobiletech.dto.OrderStatusUpdateRequest;
 import com.mgrigorakis.mobiletech.model.Order;
 import com.mgrigorakis.mobiletech.model.PaymentTransaction;
 import com.mgrigorakis.mobiletech.model.enums.OrderStatus;
-import com.mgrigorakis.mobiletech.model.enums.PaymentProvider;
+import com.mgrigorakis.mobiletech.model.enums.PaymentProviderType;
 import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
 import com.mgrigorakis.mobiletech.payments.dto.StripePaymentIntentRequest;
 import com.mgrigorakis.mobiletech.payments.dto.StripePaymentIntentResponse;
@@ -155,7 +155,7 @@ public class StripeServiceImpl {
         BalanceTransaction balanceTransaction = expandedCharge.getBalanceTransactionObject();
 
         PaymentTransaction transaction = PaymentTransaction.builder()
-                .paymentProvider(PaymentProvider.STRIPE)
+                .paymentProvider(PaymentProviderType.STRIPE)
                 .paymentStatus(PaymentStatus.PAID)
                 .grossAmount(centsToEuro(balanceTransaction.getAmount()))
                 .providerFeeAmount(centsToEuro(balanceTransaction.getFee()))
