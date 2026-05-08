@@ -16,6 +16,7 @@ import com.stripe.StripeClient;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
+import com.stripe.param.ChargeRetrieveParams;
 import com.stripe.param.PaymentIntentCreateParams;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -101,6 +102,10 @@ public class StripeServiceImpl {
             case "payment_intent.succeeded":
                 handlePaymentIntentSucceeded((PaymentIntent) stripeObject);
                 break;
+            case "charge.updated":
+                Charge charge = (Charge) stripeObject;
+                if (charge.getBalanceTransaction() != null) handleChargeUpdated(charge);
+                break;
             default:
                 log.warn("Unhandled event type: {}", event.getType());
         }
@@ -109,8 +114,6 @@ public class StripeServiceImpl {
     /**
      * Handles the {@code payment_intent.succeeded} event from Stripe webhook
      * <ul>
-     *     <li>Retrieves the {@link BalanceTransaction} from Stripe to extract gross, fee and net amounts</li>
-     *     <li>Persists a new {@link PaymentTransaction} with {@link PaymentStatus#PAID}</li>
      *     <li>Updates the {@link Order#orderStatus} to {@link OrderStatus#CONFIRMED}</li>
      * </ul>
      * @param paymentIntent The {@link PaymentIntent} from the Stripe event
@@ -124,26 +127,43 @@ public class StripeServiceImpl {
             return;
         }
 
-        String balanceTxId = paymentIntent.getLatestCharge();
-        Charge charge = stripeClient.v1().charges().retrieve(balanceTxId);
-        BalanceTransaction balanceTx = stripeClient.v1().balanceTransactions().
-                retrieve(charge.getBalanceTransaction());
+        orderService.updateOrderStatusById(Long.valueOf(orderId), new OrderStatusUpdateRequest(OrderStatus.CONFIRMED));
+    }
 
-        // Values in cents
-        long fee = balanceTx.getFee();
-        long gross = balanceTx.getAmount();
-        long net = balanceTx.getNet();
+    /**
+     * Handles the {@code charge.updated} event from Stripe webhook
+     * <ul>
+     *     <li>Retrieves the expanded {@link Charge} with {@link Balance} from Stripe to extract gross, fee and net amounts</li>
+     *     <li>Persists a new {@link PaymentTransaction} with {@link PaymentStatus#PAID}</li>
+     * </ul>
+     * @param charge The {@link Charge} from the Stripe event
+     * @throws StripeException If a Stripe API call fails
+     */
+    private void handleChargeUpdated(Charge charge) throws StripeException {
+        String orderId = charge.getMetadata().get("orderId");
+
+        if(orderId == null) {
+            log.warn("Missing orderId in Stripe Charge {}", charge.getId());
+            return;
+        }
+
+        Charge expandedCharge = stripeClient.v1().charges().retrieve(
+                charge.getId(),
+                ChargeRetrieveParams.builder().addExpand("balance_transaction").build()
+        );
+
+        BalanceTransaction balanceTransaction = expandedCharge.getBalanceTransactionObject();
 
         PaymentTransaction transaction = PaymentTransaction.builder()
                 .paymentProvider(PaymentProvider.STRIPE)
                 .paymentStatus(PaymentStatus.PAID)
-                .grossAmount(centsToEuro(gross))
-                .providerFeeAmount(centsToEuro(fee))
-                .netAmount(centsToEuro(net))
+                .grossAmount(centsToEuro(balanceTransaction.getAmount()))
+                .providerFeeAmount(centsToEuro(balanceTransaction.getFee()))
+                .netAmount(centsToEuro(balanceTransaction.getNet()))
                 .build();
 
+        transaction.setProviderTransactionId(charge.getPaymentIntent());
         paymentTransactionService.createPaymentTransaction(Long.parseLong(orderId), transaction);
-        orderService.updateOrderStatusById(Long.valueOf(orderId), new OrderStatusUpdateRequest(OrderStatus.CONFIRMED));
     }
 
     /**

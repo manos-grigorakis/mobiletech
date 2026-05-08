@@ -107,6 +107,8 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
                     .netAmount(netAmount)
                     .build();
 
+            transaction.setProviderTransactionId(result.getId());
+
             paymentTransactionService.createPaymentTransaction(Long.parseLong(customId), transaction);
             orderService.updateOrderStatusById(
                     Long.parseLong(customId), new OrderStatusUpdateRequest(OrderStatus.CONFIRMED));

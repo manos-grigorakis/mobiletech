@@ -20,6 +20,9 @@ public class PaymentTransaction extends BaseModel {
     @Column(name = "payment_provider", nullable = false)
     private PaymentProvider paymentProvider;
 
+    @Column(name = "provider_transaction_id")
+    private String providerTransactionId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status", nullable = false)
     private PaymentStatus paymentStatus;
