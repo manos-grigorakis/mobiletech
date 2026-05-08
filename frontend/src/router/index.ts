@@ -21,33 +21,28 @@ const router = createRouter({
     },
 
     // Cart
+    { path: '/cart', name: 'cart', component: () => import('@/views/CartView.vue') },
+
+    // Checkout
     {
-      path: '/cart',
-      name: 'cart',
-      component: () => import('@/views/CartView.vue'),
+      path: '/checkout',
+      name: 'checkout',
+      component: () => import('@/views/CheckoutView.vue'),
       children: [
         {
           path: '',
-          name: 'cart-list',
-          component: () => import('@/components/cart/CartList.vue'),
+          name: 'checkout-shipping',
+          component: () => import('@/components/checkout/ShippingForm.vue'),
         },
-        {
-          path: 'checkout',
-          name: 'cart-checkout',
-          component: () => import('@/components/cart/CartCheckoutForm.vue'),
-          beforeEnter: () => {
-            const cart = useCartStore()
-            if (cart.totalItems === 0) return { name: 'cart-list' }
-          },
-        },
+        // {
+        //   path: 'payment',
+        //   name: 'checkout-payment',
+        //   component: () => import('@/components/checkout/CheckoutForm.vue'),
+        // },
         {
           path: 'success',
-          name: 'order-success',
-          component: () => import('@/components/cart/OrderSuccess.vue'),
-          beforeEnter: () => {
-            const cart = useCartStore()
-            if (!cart.orderPlaced) return { name: 'cart-list' }
-          },
+          name: 'checkout-success',
+          component: () => import('@/components/checkout/OrderSuccess.vue'),
         },
       ],
     },

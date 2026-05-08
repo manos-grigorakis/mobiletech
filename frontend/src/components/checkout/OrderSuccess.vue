@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import confetti from 'canvas-confetti'
 import { CheckIcon } from '@lucide/vue'
-import { useCartStore } from '@/stores/cart'
-
-const cart = useCartStore()
 
 // TODO: Replace with actual order number
 const fakeOrderId = crypto.randomUUID()
@@ -15,10 +12,6 @@ onMounted(() => {
     spread: 80,
     origin: { y: 0.6 },
   })
-})
-
-onUnmounted(() => {
-  cart.orderPlaced = false
 })
 </script>
 
