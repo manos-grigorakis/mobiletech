@@ -9,4 +9,8 @@ public interface PaymentProvider {
     Object createPayment(CreatePaymentRequest request);
 
     void handleWebhook(String payload, String signature);
+
+    default String completePayment(String identifier) {
+        return null;
+    }
 }

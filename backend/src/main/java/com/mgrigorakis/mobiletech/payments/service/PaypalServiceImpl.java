@@ -1,5 +1,8 @@
 package com.mgrigorakis.mobiletech.payments.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgrigorakis.mobiletech.common.exception.BadGatewayException;
 import com.mgrigorakis.mobiletech.dto.OrderResponse;
 import com.mgrigorakis.mobiletech.dto.OrderStatusUpdateRequest;
@@ -7,8 +10,7 @@ import com.mgrigorakis.mobiletech.model.PaymentTransaction;
 import com.mgrigorakis.mobiletech.model.enums.OrderStatus;
 import com.mgrigorakis.mobiletech.model.enums.PaymentProviderType;
 import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
-import com.mgrigorakis.mobiletech.payments.dto.PaypalCaptureResponse;
-import com.mgrigorakis.mobiletech.payments.dto.PaypalOrderRequest;
+import com.mgrigorakis.mobiletech.payments.dto.CreatePaymentRequest;
 import com.mgrigorakis.mobiletech.payments.dto.PaypalOrderResponse;
 import com.mgrigorakis.mobiletech.service.OrderService;
 import com.mgrigorakis.mobiletech.service.PaymentTransactionService;
@@ -30,10 +32,11 @@ import java.util.concurrent.CompletionException;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, PaypalCaptureResponse> {
+public class PaypalServiceImpl implements PaymentProvider {
     private final PaypalServerSdkClient paypalClient;
     private final PaymentTransactionService paymentTransactionService;
     private final OrderService orderService;
+    private final ObjectMapper objectMapper;
 
     @Value("${app.payments.paypal.redirect-url}")
     private String paypalReturnUrl;
@@ -41,8 +44,19 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
     @Value("${app.payments.paypal.cancel-url}")
     private String paypalCancelUrl;
 
+   @Value("${app.payments.paypal.checkout-success-url}")
+   private String paypalCheckoutSuccessUrl;
+
+   @Value("${app.payments.paypal.checkout-error-url}")
+   private String paypalCheckoutErrorUrl;
+
     @Override
-    public PaypalOrderResponse createOrder(PaypalOrderRequest request) {
+    public PaymentProviderType getType() {
+        return PaymentProviderType.PAYPAL;
+    }
+
+    @Override
+    public PaypalOrderResponse createPayment(CreatePaymentRequest request) {
         OrderResponse order = orderService.getOrderById(request.orderId());
 
         OrdersController ordersController = paypalClient.getOrdersController();
@@ -81,44 +95,58 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
 
     @Transactional
     @Override
-    public PaypalCaptureResponse captureOrder(String orderId) {
-        OrdersController ordersController = paypalClient.getOrdersController();
-
-        CaptureOrderInput captureOrderInput = new CaptureOrderInput.Builder(
-                orderId, null).prefer("return=representation").build();
-
+    public void handleWebhook(String payload, String signature) {
         try {
-            ApiResponse<Order> response = ordersController.captureOrderAsync(captureOrderInput).join();
+            JsonNode root = objectMapper.readTree(payload);
+            String eventType = root.get("event_type").asText();
 
-            Order result = response.getResult();
-            PurchaseUnit purchaseUnit = result.getPurchaseUnits().getFirst();
-            String customId = purchaseUnit.getCustomId();
-            SellerReceivableBreakdown breakdown = purchaseUnit.getPayments().getCaptures().getFirst()
-                    .getSellerReceivableBreakdown();
-            BigDecimal grossAmount = new BigDecimal(breakdown.getGrossAmount().getValue());
-            BigDecimal providerFee = new BigDecimal(breakdown.getPaypalFee().getValue());
-            BigDecimal netAmount = new BigDecimal(breakdown.getNetAmount().getValue());
+            switch (eventType) {
+                case "PAYMENT.CAPTURE.COMPLETED":
+                    JsonNode resource = root.get("resource");
+                    processCompletedOrder(resource);
+                    break;
+                default:
+                    log.info("Unhandled PayPal event type: {}", eventType);
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-            log.info("PayPal captured order with custom id: {} and status: {}", customId, result.getStatus().toString());
+    private void processCompletedOrder(JsonNode resource) {
+        String customId = resource.get("custom_id").asText();
+        JsonNode sellerBreakdown = resource.get("seller_receivable_breakdown");
+        BigDecimal grossAmount = new BigDecimal(sellerBreakdown.get("gross_amount").get("value").asText());
+        BigDecimal providerFee = new BigDecimal(sellerBreakdown.get("paypal_fee").get("value").asText());
+        BigDecimal netAmount = new BigDecimal(sellerBreakdown.get("net_amount").get("value").asText());
 
-            PaymentTransaction transaction = PaymentTransaction.builder()
-                    .paymentProvider(PaymentProviderType.PAYPAL)
-                    .paymentStatus(PaymentStatus.PAID)
-                    .grossAmount(grossAmount)
-                    .providerFeeAmount(providerFee)
-                    .netAmount(netAmount)
-                    .build();
+        PaymentTransaction transaction = PaymentTransaction.builder()
+                .paymentProvider(PaymentProviderType.PAYPAL)
+                .paymentStatus(PaymentStatus.PAID)
+                .grossAmount(grossAmount)
+                .providerFeeAmount(providerFee)
+                .netAmount(netAmount)
+                .build();
 
-            transaction.setProviderTransactionId(result.getId());
+        transaction.setProviderTransactionId(resource.get("id").asText());
 
-            paymentTransactionService.createPaymentTransaction(Long.parseLong(customId), transaction);
-            orderService.updateOrderStatusById(
-                    Long.parseLong(customId), new OrderStatusUpdateRequest(OrderStatus.CONFIRMED));
+        paymentTransactionService.createPaymentTransaction(Long.parseLong(customId), transaction);
+        orderService.updateOrderStatusById(
+                Long.parseLong(customId), new OrderStatusUpdateRequest(OrderStatus.CONFIRMED));
+    }
 
-            return new PaypalCaptureResponse(customId, result.getStatus().toString(), grossAmount, providerFee,
-                                             netAmount);
+    @Override
+    public String completePayment(String identifier) {
+        try {
+            OrdersController orderController = paypalClient.getOrdersController();
+            CaptureOrderInput input = new CaptureOrderInput.Builder(identifier, null).build();
+            orderController.captureOrderAsync(input).join();
+
+            log.info("PayPal order capture completed for token: {}", identifier);
+            return paypalCheckoutSuccessUrl;
         } catch (CompletionException e) {
-            throw handlePaypalException(e);
+            log.error("PayPal order capture failed for token: {}", identifier, e);
+            return paypalCheckoutErrorUrl;
         }
     }
 
