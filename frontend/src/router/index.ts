@@ -34,11 +34,11 @@ const router = createRouter({
           name: 'checkout-shipping',
           component: () => import('@/components/checkout/ShippingForm.vue'),
         },
-        // {
-        //   path: 'payment',
-        //   name: 'checkout-payment',
-        //   component: () => import('@/components/checkout/CheckoutForm.vue'),
-        // },
+        {
+          path: 'payment',
+          name: 'checkout-payment',
+          component: () => import('@/components/checkout/CheckoutForm.vue'),
+        },
         {
           path: 'success',
           name: 'checkout-success',
