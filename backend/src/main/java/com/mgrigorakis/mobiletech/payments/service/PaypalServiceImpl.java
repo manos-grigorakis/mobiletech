@@ -1,6 +1,7 @@
 package com.mgrigorakis.mobiletech.payments.service;
 
 import com.mgrigorakis.mobiletech.common.exception.BadGatewayException;
+import com.mgrigorakis.mobiletech.dto.OrderResponse;
 import com.mgrigorakis.mobiletech.dto.OrderStatusUpdateRequest;
 import com.mgrigorakis.mobiletech.model.PaymentTransaction;
 import com.mgrigorakis.mobiletech.model.enums.OrderStatus;
@@ -43,10 +44,12 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
 
     @Override
     public PaypalOrderResponse createOrder(PaypalOrderRequest request) {
+        OrderResponse order = orderService.getOrderById(request.orderId());
+
         OrdersController ordersController = paypalClient.getOrdersController();
 
         AmountWithBreakdown amount = new AmountWithBreakdown
-                .Builder("EUR", request.amount().toPlainString()).build();
+                .Builder("EUR", order.totalAmount().toPlainString()).build();
 
         CreateOrderInput createOrderInput = new CreateOrderInput.Builder(null,
                 new OrderRequest.Builder(
@@ -63,7 +66,6 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
 
         try {
             ApiResponse<Order> response = ordersController.createOrderAsync(createOrderInput).join();
-            log.info("Creating Paypal Order Response: {}", response.getResult());
             Order result = response.getResult();
             String approveUrl = result.getLinks().stream()
                     .filter(link -> "approve".equals(link.getRel()))
@@ -71,6 +73,7 @@ public class PaypalServiceImpl implements PaymentService<PaypalOrderResponse, Pa
                     .map(LinkDescription::getHref)
                     .orElseThrow();
 
+            log.info("PayPal order created for orderId: {} paypalOrderId: {}", order.id(), result.getId());
             return new PaypalOrderResponse(result.getId(), result.getStatus().toString(), approveUrl);
         } catch (CompletionException e) {
             throw handlePaypalException(e);
