@@ -2,11 +2,16 @@
 import { onMounted } from 'vue'
 import confetti from 'canvas-confetti'
 import { CheckIcon } from '@lucide/vue'
+import { useCartStore } from '@/stores/cart'
+
+const cart = useCartStore()
 
 // TODO: Replace with actual order number
 const fakeOrderId = crypto.randomUUID()
 
 onMounted(() => {
+  cart.clearCart()
+
   confetti({
     particleCount: 150,
     spread: 80,
