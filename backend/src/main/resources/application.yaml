@@ -24,6 +24,8 @@ management:
 app:
   cors:
     allowed-origins: ${ALLOWED_ORIGINS}
+  frontend-url: ${FRONTEND_URL}
+  backend-url: ${BACKEND_URL}
   storage:
     region: ${STORAGE_REGION}
     access-key: ${STORAGE_ACCESS_KEY}
@@ -31,3 +33,15 @@ app:
     endpoint: ${STORAGE_ENDPOINT}
     bucket-name: ${STORAGE_BUCKET_NAME}
     bucket-prefix-products: ${STORAGE_BUCKET_PREFIX_PRODUCTS}
+  payments:
+    paypal:
+      client-id: ${PAYMENT_PAYPAL_CLIENT_ID}
+      client-secret: ${PAYMENT_PAYPAL_CLIENT_SECRET}
+      mode: ${PAYMENT_PAYPAL_MODE}
+      redirect-url: ${app.backend-url}/api/payments/paypal/success
+      cancel-url: ${app.backend-url}/api/payments/paypal/cancel
+      checkout-success-url: ${app.frontend-url}/checkout/success
+      checkout-error-url: ${app.frontend-url}/checkout/error
+    stripe:
+      secret-key: ${PAYMENT_STRIPE_SECRET_KEY}
+      webhook-secret: ${PAYMENT_STRIPE_WEBHOOK_SECRET}

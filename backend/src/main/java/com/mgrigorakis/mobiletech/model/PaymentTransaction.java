@@ -1,0 +1,42 @@
+package com.mgrigorakis.mobiletech.model;
+
+import com.mgrigorakis.mobiletech.model.enums.PaymentProviderType;
+import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.math.BigDecimal;
+
+@Getter
+@Setter
+@ToString(callSuper = true, exclude = {"order"})
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "payment_transactions")
+@Entity
+public class PaymentTransaction extends BaseModel {
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_provider", nullable = false)
+    private PaymentProviderType paymentProvider;
+
+    @Column(name = "provider_transaction_id")
+    private String providerTransactionId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status", nullable = false)
+    private PaymentStatus paymentStatus;
+
+    @Column(name = "gross_amount", nullable = false, scale = 2, precision = 19)
+    private BigDecimal grossAmount;
+
+    @Column(name = "provider_fee_amount", nullable = false, scale = 2, precision = 19)
+    private BigDecimal providerFeeAmount;
+
+    @Column(name = "net_amount", nullable = false, scale = 2, precision = 19)
+    private BigDecimal netAmount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
+}
