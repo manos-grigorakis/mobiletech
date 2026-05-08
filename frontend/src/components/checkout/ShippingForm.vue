@@ -61,7 +61,7 @@ const onSubmit = handleSubmit(async (data) => {
     orderItems: cart.items.map((item) => ({ productId: item.id, quantity: item.quantity })),
   }
 
-  order.createOrder(payload)
+  await order.createOrder(payload)
   await router.push({ name: 'checkout-payment' })
 })
 </script>
