@@ -38,3 +38,6 @@ app:
       mode: ${PAYMENT_PAYPAL_MODE}
       redirect-url: ${PAYMENT_PAYPAL_REDIRECT_URL}
       cancel-url: ${PAYMENT_PAYPAL_CANCEL_URL}
+    stripe:
+      secret-key: ${PAYMENT_STRIPE_SECRET_KEY}
+      webhook-secret: ${PAYMENT_STRIPE_WEBHOOK_SECRET}

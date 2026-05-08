@@ -1,7 +1,6 @@
 package com.mgrigorakis.mobiletech.dto;
 
 import com.mgrigorakis.mobiletech.model.enums.OrderStatus;
-import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,4 +23,8 @@ public record OrderResponse(
         List<OrderItemSummaryResponse> orderItems,
         List<PaymentTransactionResponse> paymentTransactions
 )
-{}
+{
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+}
