@@ -11,7 +11,6 @@ export const usePaymentStore = defineStore('payment', {
     paymentProvider: null as PaymentProvider | null,
     isLoading: false as boolean,
     stripeClientKey: null as string | null,
-    showStripeForm: false as boolean,
     error: null as string | null,
   }),
 
@@ -35,7 +34,6 @@ export const usePaymentStore = defineStore('payment', {
             window.location.href = res.data.data.approveUrl
             break
           case PaymentProvider.STRIPE:
-            this.showStripeForm = true
             this.stripeClientKey = res.data.data.clientSecret
             break
         }

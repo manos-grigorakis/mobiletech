@@ -1,5 +1,6 @@
 import { useCartStore } from '@/stores/cart'
 import { useOrderStore } from '@/stores/order'
+import { usePaymentStore } from '@/stores/payment'
 import HomeView from '@/views/HomeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -57,7 +58,8 @@ const router = createRouter({
           component: () => import('@/components/checkout/OrderSuccess.vue'),
           beforeEnter: () => {
             const order = useOrderStore()
-            if (!order.orderId) return { name: 'cart' }
+            const payment = usePaymentStore()
+            if (!order.orderId || !payment.paymentProvider) return { name: 'cart' }
           },
         },
       ],
