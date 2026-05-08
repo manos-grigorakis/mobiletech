@@ -1,6 +1,5 @@
 package com.mgrigorakis.mobiletech.dto;
 
-import com.mgrigorakis.mobiletech.model.enums.PaymentProviderType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
@@ -39,9 +38,6 @@ public record OrderRequest(
         @NotBlank(message = "Country is required")
         @Size(max = 100)
         String country,
-
-        @NotNull(message = "Payment provider is required")
-        PaymentProviderType paymentProvider,
 
         @NotEmpty(message = "At least one order item is required")
         @Valid
