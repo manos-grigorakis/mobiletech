@@ -116,7 +116,7 @@ onMounted(() => {
             value="stripe"
             class="mr-1"
           />
-          <label for="stripe">Credit Card</label>
+          <label for="stripe">Credit Card (Stripe)</label>
         </div>
       </div>
 
@@ -128,7 +128,9 @@ onMounted(() => {
           :client-secret="payment.stripeClientKey"
           @error="isProcessing = false"
         />
-        <p v-else class="text-sm text-gray-400">Select Credit Card and click continue to proceed</p>
+        <p v-else class="text-sm text-gray-400 ml-2">
+          Select Credit Card and click continue to proceed
+        </p>
       </div>
 
       <MainButton
