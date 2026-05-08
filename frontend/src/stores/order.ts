@@ -1,9 +1,7 @@
 import type { OrderRequest } from '@/types/order-request'
-import axios from 'axios'
 import { defineStore } from 'pinia'
 import { useUiStore } from './ui'
-
-const API_URL = import.meta.env.VITE_API_URL
+import api from '@/api/axios'
 
 export const useOrderStore = defineStore('order', {
   state: () => ({
@@ -20,7 +18,7 @@ export const useOrderStore = defineStore('order', {
       this.hasError = false
 
       try {
-        const res = await axios.post(`${API_URL}/orders`, payload)
+        const res = await api.post('/orders', payload)
         this.orderId = res.data.data.id
       } catch (e) {
         const ui = useUiStore()

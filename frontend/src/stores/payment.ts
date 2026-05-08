@@ -1,11 +1,9 @@
 import router from '@/router'
 import { PaymentProvider } from '@/types/payment-provider'
 import type { PaymentRequest } from '@/types/payment-request'
-import axios from 'axios'
 import { defineStore } from 'pinia'
 import { useUiStore } from './ui'
-
-const API_URL = import.meta.env.VITE_API_URL
+import api from '@/api/axios'
 
 export const usePaymentStore = defineStore('payment', {
   state: () => ({
@@ -25,7 +23,7 @@ export const usePaymentStore = defineStore('payment', {
       this.hasError = false
 
       try {
-        const res = await axios.post(`${API_URL}/payments/create`, payload)
+        const res = await api.post('/payments/create', payload)
         this.paymentProvider = payload.paymentProvider
 
         switch (this.paymentProvider) {
