@@ -1,9 +1,14 @@
 import { useCartStore } from '@/stores/cart'
+import { useOrderStore } from '@/stores/order'
+import { usePaymentStore } from '@/stores/payment'
 import HomeView from '@/views/HomeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior() {
+    return { top: 0 }
+  },
   routes: [
     { path: '/', name: 'home', component: HomeView },
     {
@@ -21,35 +26,50 @@ const router = createRouter({
     },
 
     // Cart
+    { path: '/cart', name: 'cart', component: () => import('@/views/CartView.vue') },
+
+    // Checkout
     {
-      path: '/cart',
-      name: 'cart',
-      component: () => import('@/views/CartView.vue'),
+      path: '/checkout',
+      name: 'checkout',
+      component: () => import('@/views/CheckoutView.vue'),
       children: [
         {
           path: '',
-          name: 'cart-list',
-          component: () => import('@/components/cart/CartList.vue'),
-        },
-        {
-          path: 'checkout',
-          name: 'cart-checkout',
-          component: () => import('@/components/cart/CartCheckoutForm.vue'),
+          name: 'checkout-shipping',
+          component: () => import('@/components/checkout/ShippingForm.vue'),
           beforeEnter: () => {
             const cart = useCartStore()
-            if (cart.totalItems === 0) return { name: 'cart-list' }
+            if (cart.items.length === 0) return { name: 'cart' }
+          },
+        },
+        {
+          path: 'payment',
+          name: 'checkout-payment',
+          component: () => import('@/components/checkout/CheckoutForm.vue'),
+          beforeEnter: () => {
+            const order = useOrderStore()
+            if (!order.orderId) return { name: 'checkout-shipping' }
           },
         },
         {
           path: 'success',
-          name: 'order-success',
-          component: () => import('@/components/cart/OrderSuccess.vue'),
+          name: 'checkout-success',
+          component: () => import('@/components/checkout/OrderSuccess.vue'),
           beforeEnter: () => {
-            const cart = useCartStore()
-            if (!cart.orderPlaced) return { name: 'cart-list' }
+            const order = useOrderStore()
+            const payment = usePaymentStore()
+            if (!order.orderId || !payment.paymentProvider) return { name: 'cart' }
           },
         },
       ],
+    },
+
+    // Not Found
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/NotFoundView.vue'),
     },
   ],
 })

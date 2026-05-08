@@ -7,8 +7,11 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useField, useForm } from 'vee-validate'
 import router from '@/router'
 import { useCartStore } from '@/stores/cart'
+import { useOrderStore } from '@/stores/order'
+import type { OrderRequest } from '@/types/order-request'
 
 const cart = useCartStore()
+const order = useOrderStore()
 
 const formSchema = toTypedSchema(
   z.object({
@@ -26,7 +29,6 @@ const formSchema = toTypedSchema(
       .min(3, 'Postal Code must be at least 3 characters.')
       .max(10, 'Postal Code at most 10 characters'),
     country: z.string().min(1, 'Country is required'),
-    paymentMethod: z.enum(['cash', 'stripe']).default('cash'),
   }),
 )
 
@@ -41,21 +43,32 @@ const { handleSubmit, isSubmitting } = useForm({
     city: '',
     postalCode: '',
     country: '',
-    paymentMethod: 'cash',
   },
 })
 
 const { value: countryValue, errorMessage: countryError } = useField('country')
-const { value: paymentMethodValue } = useField('paymentMethod')
 
 const onSubmit = handleSubmit(async (data) => {
-  cart.placeOrder()
-  await router.push({ name: 'order-success' })
+  const payload: OrderRequest = {
+    firstName: data.firstName,
+    lastName: data.lastName,
+    email: data.email,
+    phone: data.phone,
+    address: data.address,
+    city: data.city,
+    postalCode: data.postalCode,
+    country: data.country,
+    orderItems: cart.items.map((item) => ({ productId: item.id, quantity: item.quantity })),
+  }
+
+  await order.createOrder(payload)
+  if (order.hasError) return
+  await router.push({ name: 'checkout-payment' })
 })
 </script>
 
 <template>
-  <div class="max-w-4xl p-6 mx-auto bg-white rounded-md shadow-sm">
+  <div class="max-w-5xl p-6 mx-auto bg-white rounded-md shadow-sm">
     <form @submit="onSubmit" class="flex flex-col gap-4">
       <!-- Names -->
       <div class="flex flex-col gap-4 md:gap-2 md:flex-row">
@@ -147,41 +160,9 @@ const onSubmit = handleSubmit(async (data) => {
         </div>
       </div>
 
-      <!-- Payment -->
-      <div>
-        <p class="block mb-1"><span class="mr-1 text-xs text-red-500">*</span>Payment</p>
-
-        <!-- Cash on delivery -->
-        <div>
-          <input
-            type="radio"
-            id="cash-on-delivery"
-            v-model="paymentMethodValue"
-            value="cash"
-            class="mr-1"
-            checked
-          />
-          <label for="cash-on-delivery">Cash on delivery</label>
-        </div>
-
-        <!-- Credit card -->
-        <div>
-          <input
-            type="radio"
-            id="stripe"
-            v-model="paymentMethodValue"
-            value="stripe"
-            class="mr-1"
-            disabled
-          />
-          <label for="stripe" class="text-gray-400 line-through cursor-not-allowed"
-            >Credit Card</label
-          >
-        </div>
-      </div>
       <MainButton
         :disabled="isSubmitting"
-        :title="isSubmitting ? 'Processing...' : 'Complete Order'"
+        :title="isSubmitting ? 'Processing...' : 'Continue to Payment'"
       />
     </form>
   </div>

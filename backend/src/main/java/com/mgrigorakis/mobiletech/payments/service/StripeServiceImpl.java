@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -51,15 +52,13 @@ public class StripeServiceImpl implements PaymentProvider {
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(order.totalAmount().multiply(BigDecimal.valueOf(100)).longValue()) // Convert to cents
                 .setCurrency("eur")
+                .addPaymentMethodType("card")
                 .putAllMetadata(Map.of(
                         "orderId", order.id().toString(),
                         "itemCount", String.valueOf(order.orderItems().size())
                 ))
                 .setReceiptEmail(order.email())
                 .setShipping(buildShipping(order))
-                .setAutomaticPaymentMethods(
-                        PaymentIntentCreateParams.AutomaticPaymentMethods.builder().setEnabled(true).build()
-                )
                 .build();
 
         try {

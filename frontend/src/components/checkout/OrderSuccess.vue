@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import confetti from 'canvas-confetti'
 import { CheckIcon } from '@lucide/vue'
 import { useCartStore } from '@/stores/cart'
+import { useOrderStore } from '@/stores/order'
 
 const cart = useCartStore()
+const order = useOrderStore()
 
-// TODO: Replace with actual order number
 const fakeOrderId = crypto.randomUUID()
 
 onMounted(() => {
+  cart.clearCart()
+  order.$reset()
+
   confetti({
     particleCount: 150,
     spread: 80,
     origin: { y: 0.6 },
   })
-})
-
-onUnmounted(() => {
-  cart.orderPlaced = false
 })
 </script>
 

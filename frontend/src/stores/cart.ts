@@ -5,7 +5,6 @@ import { defineStore } from 'pinia'
 export const useCartStore = defineStore('cart', {
   state: () => ({
     items: [] as CartItem[],
-    orderPlaced: false as boolean,
   }),
 
   persist: true,
@@ -49,11 +48,6 @@ export const useCartStore = defineStore('cart', {
 
     clearCart() {
       this.items = []
-    },
-
-    placeOrder() {
-      this.orderPlaced = true
-      this.clearCart()
     },
   },
 })

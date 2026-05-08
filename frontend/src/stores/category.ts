@@ -1,8 +1,6 @@
+import api from '@/api/axios'
 import type { Category } from '@/types/category'
-import axios from 'axios'
 import { defineStore } from 'pinia'
-
-const API_URL = import.meta.env.VITE_API_URL
 
 export const useCategoryStore = defineStore('category', {
   state: () => ({
@@ -16,7 +14,7 @@ export const useCategoryStore = defineStore('category', {
       this.isLoading = true
 
       try {
-        const res = await axios.get(`${API_URL}/categories`)
+        const res = await api.get('/categories')
         this.categories = res.data.data
       } catch (e) {
         console.error('Failed to fetch categories', e)

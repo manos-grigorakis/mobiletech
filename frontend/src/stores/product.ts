@@ -1,8 +1,6 @@
+import api from '@/api/axios'
 import type { Product } from '@/types/product'
 import { defineStore } from 'pinia'
-import axios from 'axios'
-
-const API_URL = import.meta.env.VITE_API_URL
 
 export const useProductStore = defineStore('product', {
   state: () => ({
@@ -17,7 +15,7 @@ export const useProductStore = defineStore('product', {
       this.isLoading = true
 
       try {
-        const res = await axios.get(`${API_URL}/products`, { params })
+        const res = await api.get('/products', { params })
         this.products = res.data.data.content
       } catch (e) {
         console.error('Failed to fetch products', e)
@@ -31,7 +29,7 @@ export const useProductStore = defineStore('product', {
       this.isLoading = true
 
       try {
-        const res = await axios.get(`${API_URL}/products/${id}`)
+        const res = await api.get(`/products/${id}`)
         this.product = res.data.data
       } catch (e) {
         console.error(`Failed to fetch product with id: ${id}`, e)
