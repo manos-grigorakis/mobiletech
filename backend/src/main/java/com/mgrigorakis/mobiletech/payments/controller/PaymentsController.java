@@ -1,7 +1,10 @@
 package com.mgrigorakis.mobiletech.payments.controller;
 
 import com.mgrigorakis.mobiletech.common.dto.ApiResponse;
+import com.mgrigorakis.mobiletech.model.enums.PaymentProviderType;
 import com.mgrigorakis.mobiletech.payments.dto.*;
+import com.mgrigorakis.mobiletech.payments.service.PaymentProvider;
+import com.mgrigorakis.mobiletech.payments.service.PaymentProviderFactory;
 import com.mgrigorakis.mobiletech.payments.service.PaymentService;
 import com.mgrigorakis.mobiletech.payments.service.StripeServiceImpl;
 import jakarta.validation.Valid;
@@ -14,7 +17,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/payments")
 public class PaymentsController {
     private final PaymentService<PaypalOrderResponse, PaypalCaptureResponse> paymentService;
-    private final StripeServiceImpl stripeService;
+    private final PaymentProviderFactory paymentProviderFactory;
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/create")
+    public ApiResponse<?> createOrder(@RequestBody @Valid CreatePaymentRequest request) {
+        PaymentProvider provider = paymentProviderFactory.getProvider(request.paymentProvider());
+        return new ApiResponse<>(provider.createPayment(request));
+    }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/paypal/create-order")
@@ -34,17 +44,10 @@ public class PaymentsController {
         return "Success, TOKEN:  " + token;
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/stripe/create-payment-intent")
-    public ApiResponse<StripePaymentIntentResponse> createStripePaymentIntent(
-            @RequestBody @Valid StripePaymentIntentRequest request) {
-        return new ApiResponse<>(stripeService.createStripePaymentIntent(request));
-    }
-
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/stripe/webhook")
     public void captureStripePayment(
-            @RequestBody @Valid String request, @RequestHeader("Stripe-Signature") String sigHeader) {
-        stripeService.handleWebhook(request, sigHeader);
+            @RequestBody @Valid String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
+        paymentProviderFactory.getProvider(PaymentProviderType.STRIPE).handleWebhook(payload, sigHeader);
     }
 }

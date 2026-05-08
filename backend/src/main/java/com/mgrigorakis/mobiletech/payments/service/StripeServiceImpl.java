@@ -8,7 +8,7 @@ import com.mgrigorakis.mobiletech.model.PaymentTransaction;
 import com.mgrigorakis.mobiletech.model.enums.OrderStatus;
 import com.mgrigorakis.mobiletech.model.enums.PaymentProviderType;
 import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
-import com.mgrigorakis.mobiletech.payments.dto.StripePaymentIntentRequest;
+import com.mgrigorakis.mobiletech.payments.dto.CreatePaymentRequest;
 import com.mgrigorakis.mobiletech.payments.dto.StripePaymentIntentResponse;
 import com.mgrigorakis.mobiletech.service.OrderService;
 import com.mgrigorakis.mobiletech.service.PaymentTransactionService;
@@ -31,7 +31,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class StripeServiceImpl {
+public class StripeServiceImpl implements PaymentProvider {
     private final StripeClient stripeClient;
     private final OrderService orderService;
     private final PaymentTransactionService paymentTransactionService;
@@ -39,7 +39,13 @@ public class StripeServiceImpl {
     @Value("${app.payments.stripe.webhook-secret}")
     private String webhookSecret;
 
-    public StripePaymentIntentResponse createStripePaymentIntent(StripePaymentIntentRequest request) {
+    @Override
+    public PaymentProviderType getType() {
+        return PaymentProviderType.STRIPE;
+    }
+
+    @Override
+    public StripePaymentIntentResponse createPayment(CreatePaymentRequest request) {
         OrderResponse order = orderService.getOrderById(request.orderId());
 
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
@@ -68,6 +74,7 @@ public class StripeServiceImpl {
     }
 
     @Transactional
+    @Override
     public void handleWebhook(String request, String sigHeader) {
         try {
             if(request != null && !request.isEmpty() && sigHeader != null && !sigHeader.isEmpty()) {
@@ -117,9 +124,8 @@ public class StripeServiceImpl {
      *     <li>Updates the {@link Order#orderStatus} to {@link OrderStatus#CONFIRMED}</li>
      * </ul>
      * @param paymentIntent The {@link PaymentIntent} from the Stripe event
-     * @throws StripeException If a Stripe API call fails
      */
-    private void handlePaymentIntentSucceeded(PaymentIntent paymentIntent) throws StripeException {
+    private void handlePaymentIntentSucceeded(PaymentIntent paymentIntent) {
         String orderId = paymentIntent.getMetadata().get("orderId");
 
         if(orderId == null) {
