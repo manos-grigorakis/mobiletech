@@ -9,8 +9,6 @@ const navLinks: { label: string; path: string; query?: Record<string, string> }[
   { label: 'smartphones', path: '/products', query: { category: 'smartphones' } },
   { label: 'refurbished', path: '/products', query: { category: 'refurbished-phones' } },
   { label: 'accessories', path: '/accessories' },
-  { label: 'deals', path: '/deals' },
-  { label: 'support', path: '/support' },
 ]
 
 // Close navbar
