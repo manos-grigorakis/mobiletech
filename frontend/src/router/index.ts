@@ -30,10 +30,19 @@ const router = createRouter({
       component: () => import('@/views/AdminView.vue'),
       beforeEnter: () => {
         const auth = useAuthStore()
-        if (auth.user?.role !== 'ADMIN') return router.push({ name: 'not-found' })
+        if (!auth.isAuthenticated || !auth.isAdminOrManager)
+          return router.push({ name: 'not-found' })
       },
     },
-    { path: '/account', name: 'account', component: () => import('@/views/AccountView.vue') },
+    {
+      path: '/account',
+      name: 'account',
+      component: () => import('@/views/AccountView.vue'),
+      beforeEnter: () => {
+        const auth = useAuthStore()
+        if (!auth.isAuthenticated) return router.push({ name: 'not-found' })
+      },
+    },
 
     // Products
     { path: '/products', name: 'products', component: () => import('@/views/ProductsView.vue') },
