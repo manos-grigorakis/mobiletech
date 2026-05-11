@@ -46,7 +46,7 @@ const onSubmit = handleSubmit(async (data) => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto bg-white p-8 rounded-md shadow-sm">
+  <div class="max-w-lg mx-auto bg-white p-8 rounded-md shadow-sm">
     <h2 class="text-lg font-semibold text-center mb-6">Register</h2>
     <form @submit="onSubmit" class="flex flex-col gap-4">
       <div class="flex flex-col sm:flex-row gap-4">
@@ -82,5 +82,12 @@ const onSubmit = handleSubmit(async (data) => {
         class="mt-4"
       />
     </form>
+
+    <p class="text-sm text-center mt-4">
+      Already have an
+      <RouterLink :to="{ name: 'login' }" class="underline hover:text-primary-600"
+        >account?</RouterLink
+      >
+    </p>
   </div>
 </template>

@@ -36,7 +36,7 @@ const onSubmit = handleSubmit(async (data) => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto bg-white p-8 rounded-md shadow-sm">
+  <div class="max-w-lg mx-auto bg-white p-8 rounded-md shadow-sm">
     <h2 class="text-lg font-semibold text-center mb-6">Login</h2>
     <form @submit="onSubmit">
       <MainInput
@@ -54,5 +54,12 @@ const onSubmit = handleSubmit(async (data) => {
       />
       <MainButton :title="isSubmitting ? 'Processing...' : 'Login'" :disabled="isSubmitting" />
     </form>
+
+    <p class="text-sm text-center mt-4">
+      Don't have an
+      <RouterLink :to="{ name: 'register' }" class="underline hover:text-primary-600"
+        >account?</RouterLink
+      >
+    </p>
   </div>
 </template>

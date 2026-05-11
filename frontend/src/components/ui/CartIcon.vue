@@ -8,6 +8,7 @@ const cart = useCartStore()
 <template>
   <RouterLink :to="{ name: 'cart' }" class="relative">
     <ShoppingCartIcon
+      :size="24"
       class="transition-colors duration-300 hover:text-accent-500 hover:cursor-pointer"
     />
 

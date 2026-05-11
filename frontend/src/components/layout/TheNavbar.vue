@@ -35,6 +35,11 @@ const onScroll = () => {
   scrolled.value = window.scrollY > 40
 }
 
+const logout = () => {
+  closeNavbar()
+  auth.logout()
+}
+
 // Lifecycle
 onMounted(() => {
   onScroll()
@@ -76,7 +81,7 @@ onUnmounted(() => {
         >
           <span class="sr-only">Open main menu</span>
           <svg
-            class="w-10 h-10"
+            class="w-8 h-8"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
@@ -93,8 +98,8 @@ onUnmounted(() => {
       </div>
 
       <!-- Nav links -->
-      <div class="hidden md:flex md:gap-x-10 md:items-center">
-        <ul class="flex gap-10 text-sm">
+      <div class="hidden md:flex md:gap-10 md:items-center">
+        <ul class="flex gap-5 text-sm">
           <li
             v-for="link in navLinks"
             :key="link.label"
@@ -107,27 +112,18 @@ onUnmounted(() => {
         </ul>
 
         <!-- Icons -->
-        <div class="flex gap-4 items-center">
+        <div class="flex gap-5 items-center">
           <!-- Cart -->
           <CartIcon @click="closeNavbar" />
 
           <!-- Auth -->
-          <div v-if="!auth.isAuthenticated" class="flex gap-4 items-center">
-            <RouterLink
-              :to="{ name: 'login' }"
-              class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700 hover:cursor-pointer"
-            >
-              Login
-            </RouterLink>
-
-            <RouterLink
-              :to="{ name: 'register' }"
-              @click="closeNavbar"
-              class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md border border--accent-600 hover:bg-accent-700"
-            >
-              Register
-            </RouterLink>
-          </div>
+          <RouterLink
+            v-if="!auth.isAuthenticated"
+            :to="{ name: 'login' }"
+            class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700 hover:cursor-pointer"
+          >
+            Login
+          </RouterLink>
           <div v-else>
             <UserDropdown class="flex items-center" />
           </div>
@@ -154,14 +150,10 @@ onUnmounted(() => {
           <CartIcon @click="closeNavbar" />
 
           <!-- Mobile close button navbar -->
-          <button
-            @click="closeNavbar"
-            type="button"
-            class="-m-2.5 rounded-md hover:cursor-pointer p-2.5"
-          >
+          <button @click="closeNavbar" type="button" class="rounded-md hover:cursor-pointer p-2.5">
             <span class="sr-only">Close menu</span>
             <svg
-              class="w-10 h-10"
+              class="w-8 h-8"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
@@ -201,26 +193,16 @@ onUnmounted(() => {
                 My account
               </RouterLink>
 
-              <button @click="auth.logout" class="cursor-pointer hover:text-accent-500">
-                Logout
-              </button>
+              <button @click="logout" class="cursor-pointer hover:text-accent-500">Logout</button>
             </div>
 
-            <div v-else>
+            <div v-else class="mt-2">
               <RouterLink
                 :to="{ name: 'login' }"
                 @click="closeNavbar"
                 class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700"
               >
                 Login
-              </RouterLink>
-
-              <RouterLink
-                :to="{ name: 'register' }"
-                @click="closeNavbar"
-                class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md border border--accent-600 hover:bg-accent-700"
-              >
-                Register
               </RouterLink>
             </div>
           </div>
