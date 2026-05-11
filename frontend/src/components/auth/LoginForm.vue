@@ -36,25 +36,23 @@ const onSubmit = handleSubmit(async (data) => {
 </script>
 
 <template>
-  <section class="px-4 py-24">
-    <div class="max-w-md mx-auto bg-white p-8 rounded-md shadow-sm">
-      <h2 class="text-lg font-semibold text-center mb-6">Login</h2>
-      <form @submit="onSubmit">
-        <MainInput
-          label-value="Email"
-          input-id="email"
-          input-type="email"
-          placeholder="e.g. john.doe@gmail.com"
-        />
+  <div class="max-w-md mx-auto bg-white p-8 rounded-md shadow-sm">
+    <h2 class="text-lg font-semibold text-center mb-6">Login</h2>
+    <form @submit="onSubmit">
+      <MainInput
+        label-value="Email"
+        input-id="email"
+        input-type="email"
+        placeholder="e.g. john.doe@gmail.com"
+      />
 
-        <MainInput
-          label-value="Password"
-          input-id="password"
-          input-type="password"
-          class="mt-4 mb-6"
-        />
-        <MainButton :title="isSubmitting ? 'Processing...' : 'Login'" :disabled="isSubmitting" />
-      </form>
-    </div>
-  </section>
+      <MainInput
+        label-value="Password"
+        input-id="password"
+        input-type="password"
+        class="mt-4 mb-6"
+      />
+      <MainButton :title="isSubmitting ? 'Processing...' : 'Login'" :disabled="isSubmitting" />
+    </form>
+  </div>
 </template>
