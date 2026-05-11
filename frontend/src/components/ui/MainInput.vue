@@ -5,7 +5,7 @@ interface Props {
   required?: boolean
   labelValue: string
   inputId: string
-  inputType?: 'text' | 'email'
+  inputType?: 'text' | 'email' | 'password'
   placeholder?: string
 }
 

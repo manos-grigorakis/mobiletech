@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import CartIcon from '../ui/CartIcon.vue'
+import { useAuthStore } from '@/stores/auth'
+import UserDropdown from './UserDropdown.vue'
 
+const auth = useAuthStore()
 const scrolled = ref(false)
 const isNavbarOpen = ref(false)
 const navLinks: { label: string; path: string; query?: Record<string, string> }[] = [
@@ -90,7 +93,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Nav links -->
-      <div class="hidden md:flex md:gap-x-10">
+      <div class="hidden md:flex md:gap-x-10 md:items-center">
         <ul class="flex gap-10 text-sm">
           <li
             v-for="link in navLinks"
@@ -103,8 +106,24 @@ onUnmounted(() => {
           </li>
         </ul>
 
-        <!-- Cart -->
-        <CartIcon @click="closeNavbar" />
+        <!-- Icons -->
+        <div class="flex gap-4 items-center">
+          <!-- Cart -->
+          <CartIcon @click="closeNavbar" />
+
+          <!-- Auth -->
+          <div v-if="!auth.isAuthenticated">
+            <RouterLink
+              :to="{ name: 'login' }"
+              class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700 hover:cursor-pointer"
+            >
+              Login
+            </RouterLink>
+          </div>
+          <div v-else>
+            <UserDropdown class="flex items-center" />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -149,17 +168,46 @@ onUnmounted(() => {
 
       <!-- Links -->
       <transition name="mobileNav">
-        <ul v-show="isNavbarOpen" class="flex flex-col gap-2 mt-6 text-sm">
-          <li
-            v-for="link in navLinks"
-            :key="link.label"
-            class="py-2 capitalize cursor-pointer hover:text-accent-500"
-          >
-            <RouterLink :to="{ path: link.path, query: link.query }" @click="closeNavbar">{{
-              link.label
-            }}</RouterLink>
-          </li>
-        </ul>
+        <div v-show="isNavbarOpen">
+          <ul class="flex flex-col mt-6 text-sm">
+            <li
+              v-for="link in navLinks"
+              :key="link.label"
+              class="py-2 capitalize cursor-pointer hover:text-accent-500"
+            >
+              <RouterLink :to="{ path: link.path, query: link.query }" @click="closeNavbar">{{
+                link.label
+              }}</RouterLink>
+            </li>
+          </ul>
+
+          <!-- Auth -->
+          <div class="mt-1">
+            <div v-if="auth.isAuthenticated" class="flex flex-col text-sm items-start gap-2">
+              <RouterLink
+                v-if="auth.isAuthenticated"
+                :to="{ name: 'account' }"
+                @click="closeNavbar"
+                class="cursor-pointer hover:text-accent-500"
+              >
+                My account
+              </RouterLink>
+
+              <button @click="auth.logout" class="cursor-pointer hover:text-accent-500">
+                Logout
+              </button>
+            </div>
+
+            <RouterLink
+              v-else
+              :to="{ name: 'login' }"
+              @click="closeNavbar"
+              class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700"
+            >
+              Login
+            </RouterLink>
+          </div>
+        </div>
       </transition>
     </div>
   </nav>
