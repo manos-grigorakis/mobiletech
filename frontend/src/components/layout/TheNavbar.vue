@@ -112,12 +112,20 @@ onUnmounted(() => {
           <CartIcon @click="closeNavbar" />
 
           <!-- Auth -->
-          <div v-if="!auth.isAuthenticated">
+          <div v-if="!auth.isAuthenticated" class="flex gap-4 items-center">
             <RouterLink
               :to="{ name: 'login' }"
               class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700 hover:cursor-pointer"
             >
               Login
+            </RouterLink>
+
+            <RouterLink
+              :to="{ name: 'register' }"
+              @click="closeNavbar"
+              class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md border border--accent-600 hover:bg-accent-700"
+            >
+              Register
             </RouterLink>
           </div>
           <div v-else>
@@ -198,14 +206,23 @@ onUnmounted(() => {
               </button>
             </div>
 
-            <RouterLink
-              v-else
-              :to="{ name: 'login' }"
-              @click="closeNavbar"
-              class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700"
-            >
-              Login
-            </RouterLink>
+            <div v-else>
+              <RouterLink
+                :to="{ name: 'login' }"
+                @click="closeNavbar"
+                class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700"
+              >
+                Login
+              </RouterLink>
+
+              <RouterLink
+                :to="{ name: 'register' }"
+                @click="closeNavbar"
+                class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md border border--accent-600 hover:bg-accent-700"
+              >
+                Register
+              </RouterLink>
+            </div>
           </div>
         </div>
       </transition>

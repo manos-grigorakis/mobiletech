@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 import { useUiStore } from './ui'
 import { jwtDecode } from 'jwt-decode'
 import type { JwtPayload } from '@/types/jwt-payload'
+import type { RegisterRequest } from '@/types/register-request'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -45,6 +46,17 @@ export const useAuthStore = defineStore('auth', {
       } catch (e) {
         this.isAuthenticated = false
         useUiStore().setError('Invalid credentials')
+      }
+    },
+
+    async register(payload: RegisterRequest): Promise<boolean> {
+      try {
+        await api.post('/auth/register', payload)
+        useUiStore().setSuccess('Account created successfully!')
+        return true
+      } catch (e) {
+        useUiStore().setError('An error occurred. Please try again')
+        return false
       }
     },
 
