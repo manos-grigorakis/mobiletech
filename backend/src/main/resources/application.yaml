@@ -25,6 +25,9 @@ app:
   security:
     jwt:
       secret: ${JWT_SECRET}
+  admin:
+    email: ${ADMIN_EMAIL}
+    password: ${ADMIN_PASSWORD}
   cors:
     allowed-origins: ${ALLOWED_ORIGINS}
   frontend-url: ${FRONTEND_URL}
