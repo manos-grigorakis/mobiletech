@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import CartIcon from '../ui/CartIcon.vue'
+import { useAuthStore } from '@/stores/auth'
+import UserDropdown from './UserDropdown.vue'
 
+const auth = useAuthStore()
 const scrolled = ref(false)
 const isNavbarOpen = ref(false)
 const navLinks: { label: string; path: string; query?: Record<string, string> }[] = [
@@ -30,6 +33,11 @@ const handleResize = () => {
 
 const onScroll = () => {
   scrolled.value = window.scrollY > 40
+}
+
+const logout = () => {
+  closeNavbar()
+  auth.logout()
 }
 
 // Lifecycle
@@ -73,7 +81,7 @@ onUnmounted(() => {
         >
           <span class="sr-only">Open main menu</span>
           <svg
-            class="w-10 h-10"
+            class="w-8 h-8"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
@@ -90,8 +98,8 @@ onUnmounted(() => {
       </div>
 
       <!-- Nav links -->
-      <div class="hidden md:flex md:gap-x-10">
-        <ul class="flex gap-10 text-sm">
+      <div class="hidden md:flex md:gap-10 md:items-center">
+        <ul class="flex gap-5 text-sm">
           <li
             v-for="link in navLinks"
             :key="link.label"
@@ -103,8 +111,23 @@ onUnmounted(() => {
           </li>
         </ul>
 
-        <!-- Cart -->
-        <CartIcon @click="closeNavbar" />
+        <!-- Icons -->
+        <div class="flex gap-5 items-center">
+          <!-- Cart -->
+          <CartIcon @click="closeNavbar" />
+
+          <!-- Auth -->
+          <RouterLink
+            v-if="!auth.isAuthenticated"
+            :to="{ name: 'login' }"
+            class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700 hover:cursor-pointer"
+          >
+            Login
+          </RouterLink>
+          <div v-else>
+            <UserDropdown class="flex items-center" />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -127,14 +150,10 @@ onUnmounted(() => {
           <CartIcon @click="closeNavbar" />
 
           <!-- Mobile close button navbar -->
-          <button
-            @click="closeNavbar"
-            type="button"
-            class="-m-2.5 rounded-md hover:cursor-pointer p-2.5"
-          >
+          <button @click="closeNavbar" type="button" class="rounded-md hover:cursor-pointer p-2.5">
             <span class="sr-only">Close menu</span>
             <svg
-              class="w-10 h-10"
+              class="w-8 h-8"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
@@ -149,17 +168,45 @@ onUnmounted(() => {
 
       <!-- Links -->
       <transition name="mobileNav">
-        <ul v-show="isNavbarOpen" class="flex flex-col gap-2 mt-6 text-sm">
-          <li
-            v-for="link in navLinks"
-            :key="link.label"
-            class="py-2 capitalize cursor-pointer hover:text-accent-500"
-          >
-            <RouterLink :to="{ path: link.path, query: link.query }" @click="closeNavbar">{{
-              link.label
-            }}</RouterLink>
-          </li>
-        </ul>
+        <div v-show="isNavbarOpen">
+          <ul class="flex flex-col mt-6 text-sm">
+            <li
+              v-for="link in navLinks"
+              :key="link.label"
+              class="py-2 capitalize cursor-pointer hover:text-accent-500"
+            >
+              <RouterLink :to="{ path: link.path, query: link.query }" @click="closeNavbar">{{
+                link.label
+              }}</RouterLink>
+            </li>
+          </ul>
+
+          <!-- Auth -->
+          <div class="mt-1">
+            <div v-if="auth.isAuthenticated" class="flex flex-col text-sm items-start gap-2">
+              <RouterLink
+                v-if="auth.isAuthenticated"
+                :to="{ name: 'account' }"
+                @click="closeNavbar"
+                class="cursor-pointer hover:text-accent-500"
+              >
+                My account
+              </RouterLink>
+
+              <button @click="logout" class="cursor-pointer hover:text-accent-500">Logout</button>
+            </div>
+
+            <div v-else class="mt-2">
+              <RouterLink
+                :to="{ name: 'login' }"
+                @click="closeNavbar"
+                class="px-4 py-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-md bg-accent-600 hover:bg-accent-700"
+              >
+                Login
+              </RouterLink>
+            </div>
+          </div>
+        </div>
       </transition>
     </div>
   </nav>

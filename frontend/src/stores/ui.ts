@@ -2,16 +2,22 @@ import { defineStore } from 'pinia'
 
 export const useUiStore = defineStore('ui', {
   state: () => ({
-    error: null as string | null,
+    toast: null as { message: string; type: 'success' | 'error' } | null,
   }),
 
   actions: {
-    setError(message: string, timeout = 4000) {
-      this.error = message
-      setTimeout(() => (this.error = null), timeout)
+    setSuccess(message: string, timeout = 4000) {
+      this.toast = { message, type: 'success' }
+      setTimeout(() => (this.toast = null), timeout)
     },
-    clearError() {
-      this.error = null
+
+    setError(message: string, timeout = 4000) {
+      this.toast = { message, type: 'error' }
+      setTimeout(() => (this.toast = null), timeout)
+    },
+
+    clearToast() {
+      this.toast = null
     },
   },
 })

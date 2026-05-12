@@ -2,7 +2,7 @@
 import TheFooter from './components/layout/TheFooter.vue'
 import Navbar from './components/layout/TheNavbar.vue'
 import AnnouncementBar from './components/ui/AnnouncementBar.vue'
-import ErrorToast from './components/ui/ErrorToast.vue'
+import MainToast from './components/ui/MainToast.vue'
 </script>
 
 <template>
@@ -10,7 +10,7 @@ import ErrorToast from './components/ui/ErrorToast.vue'
     <AnnouncementBar />
     <Navbar />
     <main class="flex-1 mt-24">
-      <ErrorToast />
+      <MainToast />
       <RouterView />
     </main>
     <TheFooter />

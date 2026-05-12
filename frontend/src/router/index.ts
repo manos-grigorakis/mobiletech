@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { useOrderStore } from '@/stores/order'
 import { usePaymentStore } from '@/stores/payment'
@@ -15,6 +16,32 @@ const router = createRouter({
       path: '/accessories',
       name: 'accessories',
       component: () => import('@/views/AccessoriesView.vue'),
+    },
+
+    { path: '/login', name: 'login', component: () => import('@/views/auth/LoginView.vue') },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/auth/RegisterView.vue'),
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('@/views/AdminView.vue'),
+      beforeEnter: () => {
+        const auth = useAuthStore()
+        if (!auth.isAuthenticated || !auth.isAdminOrManager)
+          return router.push({ name: 'not-found' })
+      },
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: () => import('@/views/AccountView.vue'),
+      beforeEnter: () => {
+        const auth = useAuthStore()
+        if (!auth.isAuthenticated) return router.push({ name: 'not-found' })
+      },
     },
 
     // Products
