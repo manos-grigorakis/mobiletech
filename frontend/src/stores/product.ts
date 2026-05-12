@@ -2,26 +2,36 @@ import api from '@/api/axios'
 import type { Product } from '@/types/product'
 import { defineStore } from 'pinia'
 import { useUiStore } from './ui'
+import type { Pagination } from '@/types/pagination'
 
 export const useProductStore = defineStore('product', {
   state: () => ({
     products: [] as Product[],
     product: null as Product | null,
+    pagination: undefined as Pagination | undefined,
     isLoading: false as boolean,
     error: null as string | null,
   }),
 
   actions: {
     async fetchProducts(params = {}) {
-      this.isLoading = true
+      const loadingTimeout = setTimeout(() => (this.isLoading = true), 200)
 
       try {
         const res = await api.get('/products', { params })
-        this.products = res.data.data.content
+        const data = res.data.data
+        this.products = data.content
+        this.pagination = {
+          totalElements: data.totalElements,
+          last: data.last,
+          size: data.size,
+          number: data.number,
+        }
       } catch (e) {
         console.error('Failed to fetch products', e)
         this.error = 'Failed to fetch products'
       } finally {
+        clearTimeout(loadingTimeout)
         this.isLoading = false
       }
     },
@@ -41,7 +51,7 @@ export const useProductStore = defineStore('product', {
     },
 
     async deleteProductById(id: number) {
-      this.isLoading = true
+      const loadingTimeout = setTimeout(() => (this.isLoading = true), 200)
 
       try {
         await api.delete(`products/${id}`)
@@ -50,6 +60,7 @@ export const useProductStore = defineStore('product', {
       } catch (e) {
         useUiStore().setError(`Failed to delete product with id ${id}`)
       } finally {
+        clearTimeout(loadingTimeout)
         this.isLoading = false
       }
     },

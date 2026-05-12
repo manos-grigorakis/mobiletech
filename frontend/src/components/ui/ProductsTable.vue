@@ -2,8 +2,13 @@
 import { useProductStore } from '@/stores/product'
 import { PenIcon, Trash2Icon } from '@lucide/vue'
 import { onMounted } from 'vue'
+import ThePagination from './ThePagination.vue'
 
 const productStore = useProductStore()
+
+const handlePagination = (page: number) => {
+  productStore.fetchProducts({ page: page })
+}
 
 onMounted(() => {
   productStore.fetchProducts()
@@ -11,14 +16,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="overflow-hidden rounded-lg">
-    <table class="w-full bg-white shadow-md table-fixed">
+  <div class="overflow-x-auto rounded-lg">
+    <table class="w-full bg-white shadow-md mb-8">
       <thead class="text-sm text-left bg-gray-300 rounded text-body">
         <tr>
           <th class="w-12 px-6 py-3 font-medium">#</th>
-          <th class="w-36 px-6 py-3 font-medium">Category</th>
+          <th class="px-6 py-3 font-medium w-full">Name</th>
           <th class="w-32 px-6 py-3 font-medium">Brand</th>
-          <th class="px-6 py-3 font-medium">Name</th>
+          <th class="w-60 px-6 py-3 font-medium">Category</th>
           <th class="w-28 px-6 py-3 font-medium">Price (€)</th>
           <th class="w-20 px-6 py-3 font-medium">Stock</th>
           <th class="w-24 px-6 py-3 font-medium">Actions</th>
@@ -43,9 +48,9 @@ onMounted(() => {
           class="hover:bg-gray-100"
         >
           <td class="w-16 px-6 py-4">{{ product.id }}</td>
-          <td class="px-6 py-4">{{ product.category.name }}</td>
+          <td class="px-6 py-4">{{ product.name }}</td>
           <td class="px-6 py-4">{{ product.brand }}</td>
-          <td class="px-6 py-4 truncate">{{ product.name }}</td>
+          <td class="px-6 py-4">{{ product.category.name }}</td>
           <td class="px-6 py-4">{{ product.price.toFixed(2) }}</td>
           <td class="px-6 py-4">{{ product.stock }}</td>
           <td class="px-6 py-4">
@@ -67,6 +72,13 @@ onMounted(() => {
       </tbody>
     </table>
 
-    <!-- TODO: Add pagination -->
+    <ThePagination
+      v-if="productStore.pagination && productStore.products.length > 0"
+      :pagination="productStore.pagination"
+      @next-page="handlePagination"
+      @previous-page="handlePagination"
+      @go-to-page="handlePagination"
+      class="flex justify-center"
+    />
   </div>
 </template>
