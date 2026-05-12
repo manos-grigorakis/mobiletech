@@ -1,6 +1,7 @@
 import api from '@/api/axios'
 import type { Product } from '@/types/product'
 import { defineStore } from 'pinia'
+import { useUiStore } from './ui'
 
 export const useProductStore = defineStore('product', {
   state: () => ({
@@ -34,6 +35,20 @@ export const useProductStore = defineStore('product', {
       } catch (e) {
         console.error(`Failed to fetch product with id: ${id}`, e)
         this.error = 'Failed to fetch product'
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async deleteProductById(id: number) {
+      this.isLoading = true
+
+      try {
+        await api.delete(`products/${id}`)
+        this.products = this.products.filter((p) => p.id !== id)
+        useUiStore().setSuccess(`Product with id ${id} deleted successfully!`)
+      } catch (e) {
+        useUiStore().setError(`Failed to delete product with id ${id}`)
       } finally {
         this.isLoading = false
       }

@@ -21,16 +21,29 @@ export const adminRoutes = [
         name: 'admin-categories',
         component: () => import('@/views/admin/AdminCategoriesView.vue'),
       },
+
+      // Products
       {
         path: 'products',
         name: 'admin-products',
-        component: () => import('@/views/admin/AdminProductsView.vue'),
+        component: () => import('@/views/admin/AdminProductsTableView.vue'),
+      },
+      {
+        path: 'products/create',
+        name: 'admin-create-product',
+        component: () => import('@/views/admin/AdminCreateProductView.vue'),
+      },
+      {
+        path: 'products/:id/edit',
+        name: 'admin-edit-product',
+        component: () => import('@/views/admin/AdminEditProductFormView.vue'),
       },
       {
         path: 'orders',
         name: 'admin-orders',
         component: () => import('@/views/admin/AdminOrdersView.vue'),
       },
+
       // Not Found
       {
         path: ':pathMatch(.*)*',
