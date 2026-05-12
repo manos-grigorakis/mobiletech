@@ -1,4 +1,4 @@
-import api from '@/api/axios'
+import api from '@/api/api'
 import type { Product } from '@/types/product'
 import { defineStore } from 'pinia'
 import { useUiStore } from './ui'

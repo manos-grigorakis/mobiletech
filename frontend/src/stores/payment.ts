@@ -3,7 +3,7 @@ import { PaymentProvider } from '@/types/payment-provider'
 import type { PaymentRequest } from '@/types/payment-request'
 import { defineStore } from 'pinia'
 import { useUiStore } from './ui'
-import api from '@/api/axios'
+import api from '@/api/api'
 
 export const usePaymentStore = defineStore('payment', {
   state: () => ({
