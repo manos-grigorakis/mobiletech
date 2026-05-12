@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ProductsTable from '@/components/ui/ProductsTable.vue'
+import ProductsTable from '@/components/admin/ProductsTable.vue'
 </script>
 
 <template>

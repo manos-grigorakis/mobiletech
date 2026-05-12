@@ -2,7 +2,7 @@
 import { useProductStore } from '@/stores/product'
 import { PenIcon, Trash2Icon } from '@lucide/vue'
 import { onMounted } from 'vue'
-import ThePagination from './ThePagination.vue'
+import ThePagination from '../ui/ThePagination.vue'
 
 const productStore = useProductStore()
 
