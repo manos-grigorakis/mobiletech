@@ -26,7 +26,7 @@ export const adminRoutes = [
       {
         path: 'products',
         name: 'admin-products',
-        component: () => import('@/views/admin/AdminProductsTableView.vue'),
+        component: () => import('@/views/admin/AdminProductsView.vue'),
       },
       {
         path: 'products/create',
