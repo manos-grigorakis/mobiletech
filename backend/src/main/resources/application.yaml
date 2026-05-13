@@ -25,6 +25,7 @@ app:
   security:
     jwt:
       secret: ${JWT_SECRET}
+      expiration-in-minutes: ${JWT_EXPIRATION_IN_MINUTES}
   admin:
     email: ${ADMIN_EMAIL}
     password: ${ADMIN_PASSWORD}

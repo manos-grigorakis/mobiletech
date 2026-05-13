@@ -5,8 +5,9 @@ import com.mgrigorakis.mobiletech.common.dto.PageSortRequest;
 import com.mgrigorakis.mobiletech.common.exception.BadRequestException;
 import com.mgrigorakis.mobiletech.common.exception.ConflictException;
 import com.mgrigorakis.mobiletech.common.exception.ResourceNotFoundException;
-import com.mgrigorakis.mobiletech.dto.ProductRequest;
+import com.mgrigorakis.mobiletech.dto.ProductCreateRequest;
 import com.mgrigorakis.mobiletech.dto.ProductResponse;
+import com.mgrigorakis.mobiletech.dto.ProductUpdateRequest;
 import com.mgrigorakis.mobiletech.mapper.ProductMapper;
 import com.mgrigorakis.mobiletech.model.Category;
 import com.mgrigorakis.mobiletech.model.Product;
@@ -64,7 +65,7 @@ public class ProductServiceImpl  implements ProductService {
 
     @Transactional
     @Override
-    public ProductResponse createProduct(ProductRequest dto) {
+    public ProductResponse createProduct(ProductCreateRequest dto) {
         Category category = categoryRepository.findById(dto.categoryId()).orElseThrow(() -> {
             log.warn("Category not found with id {}", dto.categoryId());
             return new ResourceNotFoundException("Category not found with id " + dto.categoryId());
@@ -89,13 +90,13 @@ public class ProductServiceImpl  implements ProductService {
 
     @Transactional
     @Override
-    public ProductResponse updateProductById(Long id, ProductRequest dto) {
+    public ProductResponse updateProductById(Long id, ProductUpdateRequest dto) {
         Product product = productRepository.findById(id).orElseThrow(() -> {
             log.warn("Product not found with id {}", id);
             return new ResourceNotFoundException("Product not found with id " + id);
         });
 
-        validateFileType(dto.image());
+
 
         Category category = categoryRepository.findById(dto.categoryId()).orElseThrow(() -> {
             log.warn("Category not found with id {}", dto.categoryId());
@@ -103,10 +104,13 @@ public class ProductServiceImpl  implements ProductService {
         });
 
         try {
-            // Store to S3
-            String key = bucketPrefixProducts + "/" + product.getImageKey();
-            fileStorageService.store(key, dto.image().getBytes(), dto.image().getContentType());
-
+            if(dto.image() != null && !dto.image().isEmpty()) {
+                validateFileType(dto.image());
+                // Store to S3
+                String key = bucketPrefixProducts + "/" + product.getImageKey();
+                fileStorageService.store(key, dto.image().getBytes(), dto.image().getContentType());
+            }
+            
             // Update fields
             product.setBrand(dto.brand());
             product.setName(dto.name());

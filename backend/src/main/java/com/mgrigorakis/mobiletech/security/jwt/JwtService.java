@@ -22,6 +22,9 @@ public class JwtService {
     @Value("${app.security.jwt.secret}")
     private String jwtSecret;
 
+    @Value("${app.security.jwt.expiration-in-minutes:30}")
+    private long jwtExpirationInMinutes;
+
     public String generateJwtToken(Long id, String email, String firstName, String lastName, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", id);
@@ -51,7 +54,8 @@ public class JwtService {
     }
 
     private String createToken(Map<String, Object> claims, String email) {
-        Date tokenExpirationDate = new Date(System.currentTimeMillis() + Duration.ofMinutes(30).toMillis());
+        Date tokenExpirationDate = new Date(
+                System.currentTimeMillis() + Duration.ofMinutes(jwtExpirationInMinutes).toMillis());
 
         return Jwts.builder()
                 .claims(claims)

@@ -2,8 +2,9 @@ package com.mgrigorakis.mobiletech.service;
 
 import com.mgrigorakis.mobiletech.common.dto.PageFilterRequest;
 import com.mgrigorakis.mobiletech.common.dto.PageSortRequest;
-import com.mgrigorakis.mobiletech.dto.ProductRequest;
+import com.mgrigorakis.mobiletech.dto.ProductCreateRequest;
 import com.mgrigorakis.mobiletech.dto.ProductResponse;
+import com.mgrigorakis.mobiletech.dto.ProductUpdateRequest;
 import org.springframework.data.domain.Page;
 
 public interface ProductService {
@@ -11,9 +12,9 @@ public interface ProductService {
 
     ProductResponse getProductById(Long id);
 
-    ProductResponse createProduct(ProductRequest dto);
+    ProductResponse createProduct(ProductCreateRequest dto);
 
-    ProductResponse updateProductById(Long id, ProductRequest dto);
+    ProductResponse updateProductById(Long id, ProductUpdateRequest dto);
 
     void deleteProductById(Long id);
 }

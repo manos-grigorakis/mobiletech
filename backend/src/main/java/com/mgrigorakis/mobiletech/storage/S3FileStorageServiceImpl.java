@@ -47,6 +47,6 @@ public class S3FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public String getUrl(String prefix, String key) {
-        return endpoint + "/" + prefix + "/" + key;
+        return endpoint + "/" + bucketName + "/" + prefix + "/" + key;
     }
 }

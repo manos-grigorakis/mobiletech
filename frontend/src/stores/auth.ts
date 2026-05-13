@@ -1,4 +1,4 @@
-import api from '@/api/axios'
+import api from '@/api/api'
 import type { LoginRequest } from '@/types/login-request'
 import type { User } from '@/types/user'
 import { defineStore } from 'pinia'
