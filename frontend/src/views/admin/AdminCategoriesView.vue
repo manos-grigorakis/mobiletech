@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import CategoriesTable from '@/components/admin/CategoriesTable.vue'
+</script>
+
 <template>
-  <h2>Categories</h2>
+  <section>
+    <CategoriesTable />
+  </section>
 </template>
