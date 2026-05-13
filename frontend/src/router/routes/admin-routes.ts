@@ -21,6 +21,11 @@ export const adminRoutes = [
         name: 'admin-categories',
         component: () => import('@/views/admin/AdminCategoriesView.vue'),
       },
+      {
+        path: 'categories/create',
+        name: 'admin-create-category',
+        component: () => import('@/views/admin/AdminCreateCategoryView.vue'),
+      },
 
       // Products
       {
