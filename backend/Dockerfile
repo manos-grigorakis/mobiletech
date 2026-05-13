@@ -23,6 +23,8 @@ WORKDIR /app
 # Copy Spring Boot jar from builder to container
 COPY --from=builder /app/target/*.jar app.jar
 
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+
 # Expose ports
 # Actuator
 EXPOSE 9090
