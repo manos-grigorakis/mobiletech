@@ -58,7 +58,7 @@ public class SecurityConfig {
 
                         // Orders
                         .requestMatchers(HttpMethod.GET, "/api/orders", "/api/orders/*").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/orders").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/orders").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/orders/*/status").hasAnyAuthority("ADMIN", "MANAGER")
 
                         // Payments
