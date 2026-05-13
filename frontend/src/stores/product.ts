@@ -5,6 +5,7 @@ import { useUiStore } from './ui'
 import type { Pagination } from '@/types/pagination'
 import type { ProductRequest } from '@/types/product-request'
 import axios from 'axios'
+import { toProductFormData } from '@/utils/to-product-form-data.utils'
 
 export const useProductStore = defineStore('product', {
   state: () => ({
@@ -58,16 +59,7 @@ export const useProductStore = defineStore('product', {
       this.hasError = false
 
       try {
-        const formData = new FormData()
-        formData.append('brand', request.brand)
-        formData.append('name', request.name)
-        formData.append('price', request.price.toString())
-        formData.append('stock', request.stock.toString())
-        formData.append('categoryId', request.categoryId.toString())
-        formData.append('image', request.image)
-        if (request.description) formData.append('description', request.description)
-
-        await api.post('products', formData)
+        await api.post('products', toProductFormData(request))
         useUiStore().setSuccess('Product created successfully')
         this.hasError = false
       } catch (e) {
@@ -78,6 +70,29 @@ export const useProductStore = defineStore('product', {
         }
 
         useUiStore().setError('Failed to create product')
+        throw e
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async updateProductById(id: number, request: ProductRequest) {
+      this.isLoading = true
+      this.hasError = false
+
+      try {
+        await api.put(`products/${id}`, toProductFormData(request))
+        useUiStore().setSuccess(`Product with id ${id} updated successfully`)
+        this.hasError = false
+        this.product = null // reset product
+      } catch (e) {
+        this.hasError = true
+        if (axios.isAxiosError(e) && e.response?.status === 404) {
+          useUiStore().setError('Category dont exist')
+        }
+
+        useUiStore().setError(`Failed to updated product with id ${id}`)
+        throw e
       } finally {
         this.isLoading = false
       }

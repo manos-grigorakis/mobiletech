@@ -4,6 +4,6 @@ export interface ProductRequest {
   price: number
   stock: number
   description: string | null
-  image: File
+  image?: File
   categoryId: number
 }
