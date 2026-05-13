@@ -48,6 +48,13 @@ export const adminRoutes = [
         name: 'admin-orders',
         component: () => import('@/views/admin/AdminOrdersView.vue'),
       },
+      {
+        path: 'orders/:id',
+        name: 'admin-view-order',
+        component: () => import('@/views/admin/AdminOrderDetailsView.vue'),
+      },
+
+      // Orders
 
       // Not Found
       {
