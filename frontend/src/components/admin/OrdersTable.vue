@@ -46,7 +46,7 @@ onMounted(() => {
           <td class="px-6 py-4">
             <span
               :class="applyOrderStatusBadge(order.orderStatus.toLocaleLowerCase())"
-              class="px-2 text-xs py-1 border rounded text-sm uppercase"
+              class="px-2 text-xs py-1 border rounded uppercase"
               >{{ order.orderStatus }}</span
             >
           </td>
