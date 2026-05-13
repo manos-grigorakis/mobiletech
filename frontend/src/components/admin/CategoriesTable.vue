@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useCategoryStore } from '@/stores/category'
+import { Trash2Icon } from '@lucide/vue'
 
 const categoryStore = useCategoryStore()
 
@@ -17,6 +18,7 @@ onMounted(() => {
           <th class="w-12 px-6 py-3 font-medium">#</th>
           <th class="px-6 py-3 font-medium">Name</th>
           <th class="px-6 py-3 font-medium">Slug</th>
+          <th class="px-6 py-3 font-medium w-24">Actions</th>
         </tr>
       </thead>
 
@@ -40,6 +42,16 @@ onMounted(() => {
           <td class="w-16 px-6 py-4">{{ category.id }}</td>
           <td class="px-6 py-4">{{ category.name }}</td>
           <td class="px-6 py-4">{{ category.slug }}</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-4">
+              <button @click="categoryStore.deleteCategoryById(category.id)">
+                <Trash2Icon
+                  :size="18"
+                  class="text-red-500 hover:text-red-600 hover:cursor-pointer"
+                />
+              </button>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
