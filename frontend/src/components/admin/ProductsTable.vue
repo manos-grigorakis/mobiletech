@@ -21,7 +21,7 @@ onMounted(() => {
       <thead class="text-sm text-left bg-gray-300 rounded text-body">
         <tr>
           <th class="w-12 px-6 py-3 font-medium">#</th>
-          <th class="px-6 py-3 font-medium w-full">Name</th>
+          <th class="px-6 py-3 font-medium">Name</th>
           <th class="w-32 px-6 py-3 font-medium">Brand</th>
           <th class="w-60 px-6 py-3 font-medium">Category</th>
           <th class="w-28 px-6 py-3 font-medium">Price (€)</th>
