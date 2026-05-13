@@ -14,7 +14,7 @@ export const adminRoutes = [
       {
         path: '',
         name: 'admin',
-        component: () => import('@/views/admin/AdminDashboardView.vue'),
+        redirect: { name: 'admin-orders' },
       },
       {
         path: 'categories',

@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
-import { Package, PieChartIcon, ShoppingBag, Tag, type LucideIcon } from '@lucide/vue'
+import { Package, ShoppingBag, Tag, type LucideIcon } from '@lucide/vue'
 
 const navLinks: {
   label: string
   routeName: string
   icon: LucideIcon
 }[] = [
-  { label: 'Dashboard', routeName: 'admin', icon: PieChartIcon },
   { label: 'Categories', routeName: 'admin-categories', icon: Tag },
   { label: 'Products', routeName: 'admin-products', icon: Package },
   { label: 'Orders', routeName: 'admin-orders', icon: ShoppingBag },
