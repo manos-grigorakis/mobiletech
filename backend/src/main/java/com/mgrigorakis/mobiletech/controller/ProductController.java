@@ -3,11 +3,11 @@ package com.mgrigorakis.mobiletech.controller;
 import com.mgrigorakis.mobiletech.common.dto.ApiResponse;
 import com.mgrigorakis.mobiletech.common.dto.PageFilterRequest;
 import com.mgrigorakis.mobiletech.common.dto.PageSortRequest;
-import com.mgrigorakis.mobiletech.dto.ProductRequest;
+import com.mgrigorakis.mobiletech.dto.ProductCreateRequest;
 import com.mgrigorakis.mobiletech.dto.ProductResponse;
+import com.mgrigorakis.mobiletech.dto.ProductUpdateRequest;
 import com.mgrigorakis.mobiletech.service.ProductService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -32,14 +32,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ApiResponse<ProductResponse> createProduct(@ModelAttribute @Valid ProductRequest productRequest) {
-        return new ApiResponse<>(productService.createProduct(productRequest));
+    public ApiResponse<ProductResponse> createProduct(@ModelAttribute @Valid ProductCreateRequest request) {
+        return new ApiResponse<>(productService.createProduct(request));
     }
 
     @PutMapping("/{id}")
     public ApiResponse<ProductResponse> updateProductById(
-            @PathVariable Long id, @ModelAttribute @Valid ProductRequest productRequest) {
-        return new ApiResponse<>(productService.updateProductById(id, productRequest));
+            @PathVariable Long id, @ModelAttribute @Valid ProductUpdateRequest request) {
+        return new ApiResponse<>(productService.updateProductById(id, request));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

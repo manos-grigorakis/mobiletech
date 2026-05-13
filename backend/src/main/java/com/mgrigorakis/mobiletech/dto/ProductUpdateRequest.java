@@ -1,12 +1,11 @@
 package com.mgrigorakis.mobiletech.dto;
 
 import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.URL;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
-public record ProductRequest(
+public record ProductUpdateRequest(
         @NotBlank(message = "Brand is required")
         @Size(max = 50)
         String brand,
@@ -25,10 +24,8 @@ public record ProductRequest(
         Integer stock,
         String description,
 
-        @NotNull(message = "Image is required")
         MultipartFile image,
 
         @NotNull(message = "Category ID is required")
         Long categoryId
-) {
-}
+) {}

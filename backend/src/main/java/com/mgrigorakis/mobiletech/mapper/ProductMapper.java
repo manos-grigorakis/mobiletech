@@ -1,14 +1,14 @@
 package com.mgrigorakis.mobiletech.mapper;
 
 import com.mgrigorakis.mobiletech.dto.CategorySummaryResponse;
-import com.mgrigorakis.mobiletech.dto.ProductRequest;
+import com.mgrigorakis.mobiletech.dto.ProductCreateRequest;
 import com.mgrigorakis.mobiletech.dto.ProductResponse;
 import com.mgrigorakis.mobiletech.model.Category;
 import com.mgrigorakis.mobiletech.model.Product;
 
 public class ProductMapper {
     // DTO -> Entity
-    public static Product toEntity(ProductRequest dto, Category category) {
+    public static Product toEntity(ProductCreateRequest dto, Category category) {
         return Product.builder()
                 .brand(dto.brand())
                 .name(dto.name())
