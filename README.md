@@ -2,7 +2,8 @@
 
 A modern e-commerce platform for mobile devices, featuring product browsing, cart management and secure checkout with PayPal and Stripe payment integrations. Built with Vue 3, TypeScript, Pinia and Tailwind CSS for the frontend, alongside Spring Boot and MySQL for the backend. The project also uses MinIO for S3-compatible object storage.
 
-**[Live Demo](https://mobiletech.manosgrigorakis.com)**
+**[Live Demo](https://mobiletech.manosgrigorakis.com)** \
+**[Android Application](https://github.com/manos-grigorakis/mobiletech-android.git)**
 
 ## Features
 
