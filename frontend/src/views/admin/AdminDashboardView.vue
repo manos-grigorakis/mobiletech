@@ -128,7 +128,7 @@ onMounted(() => {
       </div>
 
       <div class="bg-white rounded-md shadow-sm border border-gray-100 px-4 py-4">
-        <p class="text-sm font-medium text-gray-600 mb-2">Monthly Revenue</p>
+        <p class="text-sm font-medium text-gray-600 mb-2">Top Selling Products</p>
         <Bar id="top-selling-products" :data="topSellingProductsChartData" />
       </div>
     </div>
