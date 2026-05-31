@@ -1,3 +1,5 @@
+USE mobiletech;
+
 -- Categories
 INSERT INTO categories (created_at, name, slug)
 VALUES (NOW(), 'Smartphones', 'smartphones'),
