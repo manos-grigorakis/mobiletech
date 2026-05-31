@@ -13,8 +13,8 @@ export const adminRoutes = [
     children: [
       {
         path: '',
-        name: 'admin',
-        redirect: { name: 'admin-orders' },
+        name: 'admin-dashboard',
+        component: () => import('@/views/admin/AdminDashboardView.vue'),
       },
       {
         path: 'categories',
