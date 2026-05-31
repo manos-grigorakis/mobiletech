@@ -46,7 +46,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
     @Override
     public List<RevenueByCategoryResponse> getRevenueByCategory() {
-        return orderItemRepository.getRevenueByCategory(PaymentStatus.PENDING);
+        return orderItemRepository.getRevenueByCategory(PaymentStatus.PAID);
     }
 
     @Override
