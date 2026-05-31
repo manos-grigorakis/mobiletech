@@ -2,7 +2,7 @@
 import AnalyticsCard from '@/components/admin/AnalyticsCard.vue'
 import { useAnalyticsStore } from '@/stores/analytics'
 import { formatPrice } from '@/utils/format-price.util'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Bar, Line } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -16,6 +16,7 @@ import {
   LineElement,
 } from 'chart.js'
 import MainButton from '@/components/ui/MainButton.vue'
+import { RefreshCw } from '@lucide/vue'
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -28,6 +29,7 @@ ChartJS.register(
 )
 
 const analyticsStore = useAnalyticsStore()
+const refreshing = ref(false)
 
 const totalRevenue = computed(() =>
   analyticsStore.totalRevenue != null ? '€' + formatPrice(analyticsStore.totalRevenue) : '-',
@@ -72,7 +74,7 @@ const topSellingProductsChartData = computed(() => ({
   ],
 }))
 
-const refresh = () => {
+const fetchData = () => {
   analyticsStore.fetchTotalRevenue()
   analyticsStore.fetchUnitsSold()
   analyticsStore.fetchStockValue()
@@ -82,8 +84,15 @@ const refresh = () => {
   analyticsStore.fetchTopSellingProducts()
 }
 
+const handleRefresh = async () => {
+  refreshing.value = true
+  // Small delay for refresh icon animation
+  const [_] = await Promise.all([fetchData(), new Promise((r) => setTimeout(r, 600))])
+  refreshing.value = false
+}
+
 onMounted(() => {
-  refresh()
+  fetchData()
 })
 </script>
 
@@ -92,7 +101,9 @@ onMounted(() => {
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-xl font-semibold">Analytics Overview</h1>
       <div class="w-32">
-        <MainButton title="Refresh" @click="refresh" />
+        <MainButton title="Refresh" @click="handleRefresh">
+          <RefreshCw :size="16" :class="{ 'animate-spin': refreshing }" />
+        </MainButton>
       </div>
     </div>
 
