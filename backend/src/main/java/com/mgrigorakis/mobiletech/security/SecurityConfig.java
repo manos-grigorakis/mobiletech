@@ -44,6 +44,9 @@ public class SecurityConfig {
                         // Auth
                         .requestMatchers("/api/auth/**").permitAll()
 
+                        // Analytics
+                        .requestMatchers(HttpMethod.GET, "/api/analytics/*").hasAnyAuthority("ADMIN", "MANAGER")
+
                         // Categories
                         .requestMatchers(HttpMethod.GET, "/api/categories", "/api/categories/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/categories").hasAnyAuthority("ADMIN", "MANAGER")

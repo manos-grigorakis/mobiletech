@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth'
-import { Package, ShoppingBag, Tag, type LucideIcon } from '@lucide/vue'
+import { Package, ShoppingBag, Tag, PieChart, type LucideIcon } from '@lucide/vue'
 
 const navLinks: {
   label: string
   routeName: string
   icon: LucideIcon
 }[] = [
+  { label: 'Dashboard', routeName: 'admin-dashboard', icon: PieChart },
   { label: 'Categories', routeName: 'admin-categories', icon: Tag },
   { label: 'Products', routeName: 'admin-products', icon: Package },
   { label: 'Orders', routeName: 'admin-orders', icon: ShoppingBag },
@@ -21,7 +22,7 @@ const logout = () => {
 </script>
 
 <template>
-  <aside class="left-0 z-40 w-64 h-screen text-white bg-primary-800" aria-label="Sidebar">
+  <aside class="fixed left-0 z-40 w-64 h-screen text-white bg-primary-800" aria-label="Sidebar">
     <div class="flex flex-col h-full px-3 py-4 overflow-y-auto">
       <RouterLink to="/"
         ><h1 class="text-2xl font-semibold">
