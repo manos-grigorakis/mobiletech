@@ -16,11 +16,17 @@ import java.util.List;
 @Slf4j
 @Configuration
 public class DataSeeder {
-    @Value("${app.admin.email}")
+    @Value("${app.accounts.admin.email}")
     private String adminEmail;
 
-    @Value("${app.admin.password}")
+    @Value("${app.accounts.admin.password}")
     private String adminPassword;
+
+    @Value("${app.accounts.demo.email}")
+    private String demoAdminEmail;
+
+    @Value("${app.accounts.demo.password}")
+    private String demoAdminPassword;
 
     @Bean
     CommandLineRunner seedRoles(
@@ -28,11 +34,12 @@ public class DataSeeder {
         return args -> {
             seedRoles(roleRepository);
             seedAdminUser(roleRepository, userRepository, passwordEncoder);
+            seedDemoAdminUser(roleRepository, userRepository, passwordEncoder);
         };
     }
 
     private void seedRoles(RoleRepository roleRepository) {
-        List.of("ADMIN", "MANAGER", "CUSTOMER").forEach(roleName -> {
+        List.of("ADMIN", "MANAGER", "CUSTOMER", "DEMO").forEach(roleName -> {
             if (roleRepository.findByName(roleName).isEmpty()) {
                 roleRepository.save(Role.builder().name(roleName).build());
                 log.info("Seeded role: {}", roleName);
@@ -48,7 +55,7 @@ public class DataSeeder {
 
             String encodedPassword = passwordEncoder.encode((adminPassword));
 
-            User user = User.builder()
+            User admin = User.builder()
                     .firstName("Admin")
                     .lastName("User")
                     .email(adminEmail)
@@ -56,8 +63,29 @@ public class DataSeeder {
                     .role(adminRole)
                     .build();
 
-            userRepository.save(user);
+            userRepository.save(admin);
             log.info("Seeded admin user: {}", adminEmail);
+        }
+    }
+
+    private void seedDemoAdminUser(
+            RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        if (userRepository.findByEmail(demoAdminEmail).isEmpty()) {
+            Role demoRole = roleRepository.findByName("DEMO")
+                    .orElseThrow(() -> new RuntimeException("DEMO role not found"));
+
+            String encodedPassword = passwordEncoder.encode((demoAdminPassword));
+
+            User demo = User.builder()
+                    .firstName("Demo")
+                    .lastName("User")
+                    .email(demoAdminEmail)
+                    .password(encodedPassword)
+                    .role(demoRole)
+                    .build();
+
+            userRepository.save(demo);
+            log.info("Seeded demo user: {}", demoAdminEmail);
         }
     }
 }

@@ -26,9 +26,13 @@ app:
     jwt:
       secret: ${JWT_SECRET}
       expiration-in-minutes: ${JWT_EXPIRATION_IN_MINUTES}
-  admin:
-    email: ${ADMIN_EMAIL}
-    password: ${ADMIN_PASSWORD}
+  accounts:
+    admin:
+      email: ${ADMIN_EMAIL}
+      password: ${ADMIN_PASSWORD}
+    demo:
+      email: ${DEMO_ADMIN_EMAIL}
+      password: ${DEMO_ADMIN_PASSWORD}
   cors:
     allowed-origins: ${ALLOWED_ORIGINS}
   frontend-url: ${FRONTEND_URL}
