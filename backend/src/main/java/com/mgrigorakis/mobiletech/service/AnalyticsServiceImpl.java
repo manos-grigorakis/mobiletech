@@ -1,11 +1,9 @@
 package com.mgrigorakis.mobiletech.service;
 
-import com.mgrigorakis.mobiletech.dto.MonthlySalesTrendResponse;
-import com.mgrigorakis.mobiletech.dto.RevenueByCategoryResponse;
-import com.mgrigorakis.mobiletech.dto.TopSellingProductResponse;
-import com.mgrigorakis.mobiletech.dto.ValueResponse;
+import com.mgrigorakis.mobiletech.dto.*;
 import com.mgrigorakis.mobiletech.model.enums.PaymentStatus;
 import com.mgrigorakis.mobiletech.repository.OrderItemRepository;
+import com.mgrigorakis.mobiletech.repository.OrderRepository;
 import com.mgrigorakis.mobiletech.repository.PaymentTransactionRepository;
 import com.mgrigorakis.mobiletech.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +21,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     private final PaymentTransactionRepository paymentTransactionRepository;
     private final ProductRepository productRepository;
     private final OrderItemRepository orderItemRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public ValueResponse<BigDecimal> getTotalRevenue() {
@@ -58,5 +57,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     public List<TopSellingProductResponse> getTopSellingProducts(int limit) {
         return orderItemRepository
                 .getTopSellingProducts(PaymentStatus.PAID, PageRequest.of(0, limit));
+    }
+
+    @Override
+    public List<OrderByStatusResponse> getOrdersByStatus() {
+        return orderRepository.getOrderByStatus();
     }
 }

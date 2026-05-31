@@ -1,10 +1,7 @@
 package com.mgrigorakis.mobiletech.controller;
 
 import com.mgrigorakis.mobiletech.common.dto.ApiResponse;
-import com.mgrigorakis.mobiletech.dto.MonthlySalesTrendResponse;
-import com.mgrigorakis.mobiletech.dto.RevenueByCategoryResponse;
-import com.mgrigorakis.mobiletech.dto.TopSellingProductResponse;
-import com.mgrigorakis.mobiletech.dto.ValueResponse;
+import com.mgrigorakis.mobiletech.dto.*;
 import com.mgrigorakis.mobiletech.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,5 +52,10 @@ public class AnalyticsController {
     public ApiResponse<List<TopSellingProductResponse>> getTopSellingProducts(
             @RequestParam(defaultValue = "5") int limit) {
         return new ApiResponse<>(analyticsService.getTopSellingProducts(limit));
+    }
+
+    @GetMapping("/orders-by-status")
+    public ApiResponse<List<OrderByStatusResponse>> getOrdersByStatus() {
+        return new ApiResponse<>(analyticsService.getOrdersByStatus());
     }
 }

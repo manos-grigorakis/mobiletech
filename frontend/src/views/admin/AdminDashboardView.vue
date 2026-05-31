@@ -3,7 +3,7 @@ import AnalyticsCard from '@/components/admin/AnalyticsCard.vue'
 import { useAnalyticsStore } from '@/stores/analytics'
 import { formatPrice } from '@/utils/format-price.util'
 import { computed, onMounted, ref } from 'vue'
-import { Bar, Line } from 'vue-chartjs'
+import { Bar, Line, Doughnut } from 'vue-chartjs'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,6 +14,7 @@ import {
   Legend,
   PointElement,
   LineElement,
+  ArcElement,
 } from 'chart.js'
 import MainButton from '@/components/ui/MainButton.vue'
 import { RefreshCw } from '@lucide/vue'
@@ -26,6 +27,7 @@ ChartJS.register(
   Legend,
   PointElement,
   LineElement,
+  ArcElement,
 )
 
 const analyticsStore = useAnalyticsStore()
@@ -74,6 +76,35 @@ const topSellingProductsChartData = computed(() => ({
   ],
 }))
 
+const ordersByStatusChartData = computed(() => ({
+  labels: analyticsStore.ordersByStatus.map((i) => i.orderStatus),
+  datasets: [
+    {
+      data: analyticsStore.ordersByStatus.map((i) => i.count),
+      backgroundColor: [
+        '#6366f1',
+        '#f59e0b',
+        '#10b981',
+        '#3b82f6',
+        '#ef4444',
+        '#8b5cf6',
+        '#ec4899',
+      ],
+    },
+  ],
+}))
+
+const ordersByStatusChartOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
+  cutout: '65%',
+  plugins: {
+    legend: {
+      position: 'bottom' as const,
+    },
+  },
+}
+
 const fetchData = () => {
   analyticsStore.fetchTotalRevenue()
   analyticsStore.fetchUnitsSold()
@@ -82,6 +113,7 @@ const fetchData = () => {
   analyticsStore.fetchRevenueByCategory()
   analyticsStore.fetchMonthlySalesTrend()
   analyticsStore.fetchTopSellingProducts()
+  analyticsStore.fetchOrdersByStatus()
 }
 
 const handleRefresh = async () => {
@@ -120,6 +152,18 @@ onMounted(() => {
       <div class="bg-white rounded-md shadow-sm border border-gray-100 px-4 py-4">
         <p class="text-sm font-medium text-gray-600 mb-2">Revenue by Category</p>
         <Bar id="revenue-by-category" :data="revenueByCategoryChartData" />
+      </div>
+
+      <div class="bg-white rounded-md shadow-sm border border-gray-100 px-4 py-4">
+        <p class="text-sm font-medium text-gray-600 mb-2">Orders by Status</p>
+
+        <div class="h-80 flex justify-center items-center">
+          <Doughnut
+            id="orders-by-status"
+            :data="ordersByStatusChartData"
+            :options="ordersByStatusChartOptions"
+          />
+        </div>
       </div>
 
       <div class="bg-white rounded-md shadow-sm border border-gray-100 px-4 py-4">

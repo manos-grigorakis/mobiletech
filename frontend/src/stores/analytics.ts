@@ -1,5 +1,6 @@
 import api from '@/api/api'
 import type { MonthlySalesTrendItem } from '@/types/monthly-sales-trend-item'
+import type { OrderByStatus } from '@/types/order-by-status'
 import type { RevenueByCategoryItem } from '@/types/revenue-by-category-item'
 import type { TopSellingProductsItem } from '@/types/top-selling-products-item'
 import { defineStore } from 'pinia'
@@ -13,6 +14,7 @@ export const useAnalyticsStore = defineStore('analytics', {
     revenueByCategory: [] as RevenueByCategoryItem[],
     monthlySalesTrend: [] as MonthlySalesTrendItem[],
     topSellingProducts: [] as TopSellingProductsItem[],
+    ordersByStatus: [] as OrderByStatus[],
   }),
 
   actions: {
@@ -76,6 +78,15 @@ export const useAnalyticsStore = defineStore('analytics', {
         this.topSellingProducts = res.data.data
       } catch (e) {
         console.error('Failed to fetch top selling products', e)
+      }
+    },
+
+    async fetchOrdersByStatus() {
+      try {
+        const res = await api.get('/analytics/orders-by-status')
+        this.ordersByStatus = res.data.data
+      } catch (e) {
+        console.error('Failed to fetch orders by status', e)
       }
     },
   },
