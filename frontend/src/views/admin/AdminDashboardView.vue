@@ -118,9 +118,13 @@ const fetchData = () => {
 
 const handleRefresh = async () => {
   refreshing.value = true
+
   // Small delay for refresh icon animation
-  const [_] = await Promise.all([fetchData(), new Promise((r) => setTimeout(r, 600))])
-  refreshing.value = false
+  try {
+    await Promise.all([fetchData(), new Promise((resolve) => setTimeout(resolve, 600))])
+  } finally {
+    refreshing.value = false
+  }
 }
 
 onMounted(() => {
@@ -133,7 +137,7 @@ onMounted(() => {
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-xl font-semibold">Analytics Overview</h1>
       <div class="w-32">
-        <MainButton title="Refresh" @click="handleRefresh">
+        <MainButton title="Refresh" @click="handleRefresh" :disabled="refreshing">
           <RefreshCw :size="16" :class="{ 'animate-spin': refreshing }" />
         </MainButton>
       </div>

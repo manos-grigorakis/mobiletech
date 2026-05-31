@@ -74,7 +74,7 @@ onMounted(() => {
           <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">Customer</p>
           <div class="flex items-center mb-3 gap-2">
             <div
-              class="w-9 h-9 rounded-full bg-primary-100 text-primary-800 flex items-center justify-center text-sm font-medium flex-shrink-0"
+              class="w-9 h-9 rounded-full bg-primary-100 text-primary-800 flex items-center justify-center text-sm font-medium shrink-0"
             >
               {{ customerInitials }}
             </div>
