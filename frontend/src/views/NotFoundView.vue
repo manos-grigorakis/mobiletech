@@ -16,7 +16,7 @@ const isAdmin = computed(() => route.path.startsWith('/admin'))
       The page you're looking for doesn't exist.
     </h3>
     <RouterLink
-      :to="isAdmin ? { name: 'admin' } : { name: 'products' }"
+      :to="isAdmin ? { name: 'admin-dashboard' } : { name: 'products' }"
       class="mt-4 hover:underline hover:text-primary-500"
     >
       {{ isAdmin ? 'Back to Dashboard' : 'Explore Products' }}
