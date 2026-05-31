@@ -16,7 +16,7 @@ const cart = useCartStore()
     <div
       v-for="item in cart.items"
       :key="item.id"
-      class="flex items-center justify-between mb-1.5 text-sm"
+      class="flex items-center gap-2 justify-between mb-1.5 text-sm"
     >
       <span class="text-gray-600">{{ item.quantity }} x {{ item.name }}</span>
       <span class="font-medium">{{ (item.quantity * item.price).toFixed(2) }}€</span>

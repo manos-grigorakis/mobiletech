@@ -45,7 +45,7 @@ const logout = () => {
 
       <div class="px-3 py-4 mt-auto border-t border-primary-700">
         <p class="text-sm font-medium">{{ auth.user?.firstName }} {{ auth.user?.lastName }}</p>
-        <p class="text-xs text-gray-400">{{ auth.user?.email }}</p>
+        <p class="text-xs text-gray-400 truncate">{{ auth.user?.email }}</p>
         <button
           @click="logout"
           class="mt-2 text-sm text-red-400 hover:text-red-300 hover:cursor-pointer"

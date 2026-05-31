@@ -43,7 +43,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         <p class="text-sm font-medium text-gray-900">
           {{ auth.user?.firstName }} {{ auth.user?.lastName }}
         </p>
-        <p class="text-xs text-gray-500">{{ auth.user?.email }}</p>
+        <p class="text-xs text-gray-500 truncate">{{ auth.user?.email }}</p>
       </div>
 
       <div class="py-1">
