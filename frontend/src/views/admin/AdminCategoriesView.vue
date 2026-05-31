@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import CategoriesTable from '@/components/admin/CategoriesTable.vue'
 import MainButton from '@/components/ui/MainButton.vue'
+import { useAuthStore } from '@/stores/auth'
 import { useCategoryStore } from '@/stores/category'
 import { RefreshCw } from '@lucide/vue'
 import { ref } from 'vue'
 
+const authStore = useAuthStore()
 const categoryStore = useCategoryStore()
 const refreshing = ref(false)
 
@@ -37,10 +39,19 @@ const handleRefresh = async () => {
         </div>
 
         <RouterLink
+          v-if="authStore.isAdminOrManager"
           :to="{ name: 'admin-create-category' }"
           class="px-4 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-lg bg-green-500 hover:bg-green-600 hover:cursor-pointer"
           >Create category</RouterLink
         >
+
+        <button
+          v-else
+          disabled
+          class="px-4 py-3 text-sm font-medium tracking-wide text-white rounded-lg bg-green-300 cursor-not-allowed"
+        >
+          Create category
+        </button>
       </div>
     </div>
     <CategoriesTable />

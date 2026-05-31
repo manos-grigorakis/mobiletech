@@ -2,7 +2,9 @@
 import { onMounted } from 'vue'
 import { useCategoryStore } from '@/stores/category'
 import { Trash2Icon } from '@lucide/vue'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const categoryStore = useCategoryStore()
 
 onMounted(() => {
@@ -44,11 +46,12 @@ onMounted(() => {
           <td class="px-6 py-4">{{ category.slug }}</td>
           <td class="px-6 py-4">
             <div class="flex items-center gap-4">
-              <button @click="categoryStore.deleteCategoryById(category.id)">
-                <Trash2Icon
-                  :size="18"
-                  class="text-red-500 hover:text-red-600 hover:cursor-pointer"
-                />
+              <button
+                @click="categoryStore.deleteCategoryById(category.id)"
+                :disabled="!authStore.isAdminOrManager"
+                class="disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <Trash2Icon :size="18" class="text-red-500 hover:text-red-600" />
               </button>
             </div>
           </td>

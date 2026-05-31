@@ -3,7 +3,9 @@ import { useProductStore } from '@/stores/product'
 import { PenIcon, Trash2Icon } from '@lucide/vue'
 import { onMounted } from 'vue'
 import ThePagination from '../ui/ThePagination.vue'
+import { useAuthStore } from '@/stores/auth.ts'
 
+const authStore = useAuthStore()
 const productStore = useProductStore()
 
 const handlePagination = (page: number) => {
@@ -56,15 +58,26 @@ onMounted(() => {
           <td class="px-6 py-4">
             <div class="flex items-center gap-4">
               <RouterLink
+                v-if="authStore.isAdminOrManager"
                 :to="{ name: 'admin-edit-product', params: { id: product.id } }"
                 class="text-primary-500 hover:text-primary-600 hover:cursor-pointer"
                 ><PenIcon :size="18"
               /></RouterLink>
-              <button @click="productStore.deleteProductById(product.id)">
-                <Trash2Icon
-                  :size="18"
-                  class="text-red-500 hover:text-red-600 hover:cursor-pointer"
-                />
+
+              <button
+                v-else
+                disabled
+                class="disabled:cursor-not-allowed disabled:opacity-40 text-primary-500"
+              >
+                <PenIcon :size="18" />
+              </button>
+
+              <button
+                @click="productStore.deleteProductById(product.id)"
+                :disabled="!authStore.isAdminOrManager"
+                class="disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <Trash2Icon :size="18" class="text-red-500 hover:text-red-600" />
               </button>
             </div>
           </td>

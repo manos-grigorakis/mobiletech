@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
 import { useOrderStore } from '@/stores/order'
 import { applyOrderStatusBadge } from '@/utils/apply-order-status-badge.util'
 import { FormatDate } from '@/utils/format-date.util'
@@ -7,6 +8,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+const authStore = useAuthStore()
 const orderStore = useOrderStore()
 const selectedStatus = ref(orderStore.order?.orderStatus)
 
@@ -60,6 +62,7 @@ onMounted(() => {
           </select>
           <button
             @click="updateStatus"
+            :disabled="!authStore.isAdminOrManager"
             class="p-2 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-lg disabled:cursor-not-allowed disabled:bg-gray-500 bg-primary-600 hover:bg-primary-700 hover:cursor-pointer"
           >
             Update status

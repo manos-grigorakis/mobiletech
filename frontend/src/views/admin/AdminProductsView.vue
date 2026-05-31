@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import ProductsTable from '@/components/admin/ProductsTable.vue'
 import MainButton from '@/components/ui/MainButton.vue'
+import { useAuthStore } from '@/stores/auth'
 import { useProductStore } from '@/stores/product'
 import { RefreshCw } from '@lucide/vue'
 import { ref } from 'vue'
 
-const refreshing = ref(false)
+const authStore = useAuthStore()
 const productStore = useProductStore()
+const refreshing = ref(false)
 
 const handleRefresh = async () => {
   refreshing.value = true
@@ -36,10 +38,19 @@ const handleRefresh = async () => {
         </div>
 
         <RouterLink
+          v-if="authStore.isAdminOrManager"
           :to="{ name: 'admin-create-product' }"
           class="px-4 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-200 rounded-lg bg-green-500 hover:bg-green-600 hover:cursor-pointer"
           >Create product</RouterLink
         >
+
+        <button
+          v-else
+          disabled
+          class="px-4 py-3 text-sm font-medium tracking-wide text-white rounded-lg bg-green-300 cursor-not-allowed"
+        >
+          Create product
+        </button>
       </div>
     </div>
     <ProductsTable />
