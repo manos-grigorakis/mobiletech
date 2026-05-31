@@ -11,6 +11,9 @@ A modern e-commerce platform for mobile devices, featuring product browsing, car
 - Cart management
 - Secure checkout with 3 payment methods (Cash on Delivery, PayPal, Stripe)
 - Webhook handling for real-time payment confirmation
+- Authentication and JWT-based authorization
+- Admin dashboard with analytics (revenue, orders, top products)
+- Role-based access control (Admin, Manager, Demo)
 - Responsive design
 
 ## Tech Stack
@@ -58,19 +61,7 @@ A modern e-commerce platform for mobile devices, featuring product browsing, car
    docker compose -f backend/docker-compose.yaml up -d
    ```
 
-4. Install frontend dependencies
-
-   ```bash
-   cd frontend && npm install
-   ```
-
-5. Start frontend development server
-
-   ```bash
-   npm run dev
-   ```
-
-6. Start backend server
+4. Start backend server
    1. (Recommended) With IntelliJ IDEA \
       Open the `backend` directory in IntelliJ IDEA and the run configuration will automatically load.
 
@@ -86,7 +77,37 @@ A modern e-commerce platform for mobile devices, featuring product browsing, car
       cd backend && ./mvnw spring-boot:run
       ```
 
+5. Seed the database
+   1. Init
+
+      ```bash
+      docker exec -i mobiletech-mysql-dev mysql -u<MYSQL_USER> -p<MYSQL_PASSWORD>  < backend/src/main/resources/db/init.sql
+      ```
+
+   2. Analytics Sample
+
+      ```bash
+      docker exec -i mobiletech-mysql-dev mysql -u<MYSQL_USER> -p<MYSQL_PASSWORD>  < backend/src/main/resources/db/analytics-sample.dev.sql
+      ```
+
+6. Install frontend dependencies
+
+   ```bash
+   cd frontend && npm install
+   ```
+
+7. Start frontend development server
+
+   ```bash
+   npm run dev
+   ```
+
 ## Test Credentials
+
+**Demo User (Read-Only Admin Access)**
+
+- Email: `demo@mobiletech.manosgrigorakis.com`
+- Password: `!Demo123@`
 
 **PayPal Sandbox**
 
@@ -99,6 +120,11 @@ A modern e-commerce platform for mobile devices, featuring product browsing, car
 - Decline Card: `4000 0000 0000 0002`
 - Expiry: Any future date
 - CVC: Any 3 digits
+
+## API
+
+A Postman collection is available for testing the API endpoints. \
+Import `docs/postman/MobileTech.postman_collection.json` into Postman.
 
 ## Screenshots
 
@@ -121,3 +147,7 @@ A modern e-commerce platform for mobile devices, featuring product browsing, car
 ### Successful Checkout
 
 ![Successful Checkout](/docs/gifs/successful-checkout.gif)
+
+### Admin Dashboard
+
+![Admin Dashboard](/docs/screenshots/admin-dashboard.webp)
