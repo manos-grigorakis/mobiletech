@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', {
     isAdminOrManager: (state) => state.user?.role === 'ADMIN' || state.user?.role === 'MANAGER',
     dashboardRoute: (state) => {
       if (state.user?.role === 'ADMIN' || state.user?.role === 'MANAGER') {
-        return { name: 'admin' }
+        return { name: 'admin-dashboard' }
       }
       return { name: 'account' }
     },
@@ -44,6 +44,7 @@ export const useAuthStore = defineStore('auth', {
 
         this.isAuthenticated = true
       } catch (e) {
+        console.error(e)
         this.isAuthenticated = false
         useUiStore().setError('Invalid credentials')
       }
