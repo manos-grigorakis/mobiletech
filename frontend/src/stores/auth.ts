@@ -20,8 +20,13 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     isAdminOrManager: (state) => state.user?.role === 'ADMIN' || state.user?.role === 'MANAGER',
+    isDemoUser: (state) => state.user?.role === 'DEMO',
     dashboardRoute: (state) => {
-      if (state.user?.role === 'ADMIN' || state.user?.role === 'MANAGER') {
+      if (
+        state.user?.role === 'ADMIN' ||
+        state.user?.role === 'MANAGER' ||
+        state.user?.role === 'DEMO'
+      ) {
         return { name: 'admin-dashboard' }
       }
       return { name: 'account' }

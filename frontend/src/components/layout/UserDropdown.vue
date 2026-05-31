@@ -52,7 +52,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           @click="isOpen = false"
           class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
         >
-          {{ auth.isAdminOrManager ? 'Admin panel' : 'My account' }}
+          {{ auth.isAdminOrManager || auth.isDemoUser ? 'Admin panel' : 'My account' }}
         </RouterLink>
 
         <div class="border-t border-gray-100 my-1" />
