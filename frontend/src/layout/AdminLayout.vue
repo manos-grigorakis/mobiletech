@@ -13,7 +13,7 @@ const authStore = useAuthStore()
       <!-- Demo User Banner -->
       <div
         v-if="authStore.isDemoUser"
-        class="w-full bg-primary-50 border-b border-primary-200 px-6 py-2 text-sm text-primary-700 text-center mb-6"
+        class="w-full bg-primary-50 rounded border-b border-primary-200 px-6 py-2 text-sm text-primary-700 text-center mb-6"
       >
         You are viewing a read-only demo. Create, edit and delete actions are disabled.
       </div>
