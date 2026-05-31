@@ -1,0 +1,703 @@
+{
+  "info": {
+    "_postman_id": "4de3d5b9-7e38-479f-9886-005f6dc1a016",
+    "name": "MobileTech",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "36353511"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse the JSON response\r",
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "// Save the token as a collection variable\r",
+                  "pm.collectionVariables.set(\"authToken\", response.data.token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n// ADMIN\r\n{\r\n    \"email\": \"{{ADMIN_EMAIL}}\",\r\n    \"password\": \"{{ADMIN_PASSWORD}}\"\r\n}\r\n\r\n// Dev\r\n// {\r\n//     \"email\": \"{{DEV_EMAIL}}\",\r\n//     \"password\": \"{{DEV_PASSWORD}}\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"password\": \"user12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/register",
+              "host": ["{{BASE_URL}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/categories",
+              "host": ["{{BASE_URL}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/categories/1",
+              "host": ["{{BASE_URL}}"],
+              "path": ["categories", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"smartphones\", \n    \"slug\": \"smartphones\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/categories",
+              "host": ["{{BASE_URL}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category by ID",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"refurbished phones\", \n    \"slug\": \"refurbished-phones\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/categories/1",
+              "host": ["{{BASE_URL}}"],
+              "path": ["categories", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/categories/1",
+              "host": ["{{BASE_URL}}"],
+              "path": ["categories", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Product",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/products",
+              "host": ["{{BASE_URL}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page to show",
+                  "disabled": true
+                },
+                {
+                  "key": "size",
+                  "value": "50",
+                  "description": "Size of the page",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "stock",
+                  "description": "Sort by field",
+                  "disabled": true
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "",
+                  "description": "Sort direction ASC or DESC",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "refurbished-phones",
+                  "description": "Slug required",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/products/20",
+              "host": ["{{BASE_URL}}"],
+              "path": ["products", "20"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "brand",
+                  "value": "Apple",
+                  "description": "Product Brand",
+                  "type": "text",
+                  "uuid": "75c5604e-1dd8-4c21-a1c6-8fb48ba728d2"
+                },
+                {
+                  "key": "name",
+                  "value": "iPhone 20 Pro Max",
+                  "description": "Product Name",
+                  "type": "text",
+                  "uuid": "7a644295-8a59-4bb6-9dc3-648c8010de90"
+                },
+                {
+                  "key": "price",
+                  "value": "1499.99",
+                  "description": "Product Price",
+                  "type": "text",
+                  "uuid": "6f8bb915-3541-467a-99ce-591e0636f657"
+                },
+                {
+                  "key": "stock",
+                  "value": "20",
+                  "description": "Product Stock",
+                  "type": "text",
+                  "uuid": "6002acbf-a2ab-4588-a636-836711be2127"
+                },
+                {
+                  "key": "description",
+                  "value": "Latest Apple flagship smartphone with A17 chip and improved camera system.",
+                  "description": "Product Description",
+                  "type": "text",
+                  "uuid": "4121acd0-7847-45e5-ad27-60b821cf7072"
+                },
+                {
+                  "key": "image",
+                  "description": "Product image. Supported files .webp",
+                  "type": "file",
+                  "uuid": "c2db3f7e-60bf-49b9-85a0-a54636161735",
+                  "value": null
+                },
+                {
+                  "key": "categoryId",
+                  "value": "1",
+                  "description": "Product Category ID",
+                  "type": "text",
+                  "uuid": "7cf87dce-17d3-42a5-b63b-97df8ced87ee"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products",
+              "host": ["{{BASE_URL}}"],
+              "path": ["products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product by ID",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "brand",
+                  "value": "Apple 2",
+                  "description": "Product Brand",
+                  "type": "text",
+                  "uuid": "055fd64a-87dc-44f6-b720-d1cef11556f4"
+                },
+                {
+                  "key": "name",
+                  "value": "Apple something",
+                  "description": "Product Name",
+                  "type": "text",
+                  "uuid": "73ec6d4d-3da9-4d24-a838-ee110774c190"
+                },
+                {
+                  "key": "price",
+                  "value": "80.00",
+                  "description": "Product Price",
+                  "type": "text",
+                  "uuid": "0973eb94-3904-4e56-9cac-2797e6083518"
+                },
+                {
+                  "key": "stock",
+                  "value": "25",
+                  "description": "Product Stock",
+                  "type": "text",
+                  "uuid": "2a81935d-e206-43d6-9636-b690d7423d4d"
+                },
+                {
+                  "key": "description",
+                  "value": "hello",
+                  "description": "Product Description",
+                  "type": "text",
+                  "uuid": "40614fc4-f2ac-45bf-bb05-3da754d0857e"
+                },
+                {
+                  "key": "image",
+                  "description": "Product image. Optional if not upload old one will be used. Product image. Supported files .webp",
+                  "type": "file",
+                  "uuid": "8afb8b5e-1b89-401b-aec4-ee86feb194f5",
+                  "src": "/C:/Users/Manos/Downloads/samsung-powerbank-pd-white.webp",
+                  "disabled": true
+                },
+                {
+                  "key": "categoryId",
+                  "value": "1",
+                  "description": "Product Category ID",
+                  "type": "text",
+                  "uuid": "057b8e05-8368-4505-84db-3b8833192995"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/products/1",
+              "host": ["{{BASE_URL}}"],
+              "path": ["products", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/products/1",
+              "host": ["{{BASE_URL}}"],
+              "path": ["products", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Order",
+      "item": [
+        {
+          "name": "Get Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/orders",
+              "host": ["{{BASE_URL}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page to show",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "size",
+                  "value": "20",
+                  "description": "Data per page",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "id",
+                  "description": "Sort by field",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortDirection",
+                  "value": "desc",
+                  "description": "Sort direction ASC or DESC",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/orders/4",
+              "host": ["{{BASE_URL}}"],
+              "path": ["orders", "4"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"Manos\",\r\n  \"lastName\": \"Doe\",\r\n  \"email\": \"john@example.com\",\r\n  \"phone\": \"+306912345678\",\r\n  \"address\": \"123 Example Street\",\r\n  \"city\": \"Piraeus\",\r\n  \"postalCode\": \"18531\",\r\n  \"country\": \"Greece\",\r\n  \"orderItems\": [\r\n    {\r\n      \"productId\": 1,\r\n      \"quantity\": 1\r\n    },\r\n    {\r\n      \"productId\": 5,\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/orders",
+              "host": ["{{BASE_URL}}"],
+              "path": ["orders"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"pending\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/orders/3/status",
+              "host": ["{{BASE_URL}}"],
+              "path": ["orders", "3", "status"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Create Payment",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"orderId\": 79,\r\n    \"paymentProvider\": \"cash_on_delivery\" // stripe, paypal or cash_on_delivery\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/payments/create",
+              "host": ["{{BASE_URL}}"],
+              "path": ["payments", "create"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Get Total Revenue",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/analytics/total-revenue",
+              "host": ["{{BASE_URL}}"],
+              "path": ["analytics", "total-revenue"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Units Sold",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/analytics/units-sold",
+              "host": ["{{BASE_URL}}"],
+              "path": ["analytics", "units-sold"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Products to Restock",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/analytics/products-re-stock",
+              "host": ["{{BASE_URL}}"],
+              "path": ["analytics", "products-re-stock"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stock Value",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/analytics/stock-value",
+              "host": ["{{BASE_URL}}"],
+              "path": ["analytics", "stock-value"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Revenue by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/analytics/revenue-by-category",
+              "host": ["{{BASE_URL}}"],
+              "path": ["analytics", "revenue-by-category"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Monthly Sales Trend",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/analytics/monthly-sales-trend",
+              "host": ["{{BASE_URL}}"],
+              "path": ["analytics", "monthly-sales-trend"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Top Selling Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/analytics/top-selling-products",
+              "host": ["{{BASE_URL}}"],
+              "path": ["analytics", "top-selling-products"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": null,
+                  "description": "Limit of top selling products to return. Default value is 5.",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Orders by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/analytics/orders-by-status",
+              "host": ["{{BASE_URL}}"],
+              "path": ["analytics", "orders-by-status"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    },
+    {
+      "key": "ADMIN_EMAIL",
+      "value": "admin@mobiletech.com"
+    },
+    {
+      "key": "ADMIN_PASSWORD",
+      "value": "admin123"
+    },
+    {
+      "key": "DEV_EMAIL",
+      "value": "john.doe@example.com"
+    },
+    {
+      "key": "DEV_PASSWORD",
+      "value": "user12345"
+    }
+  ]
+}

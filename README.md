@@ -11,6 +11,7 @@ A modern e-commerce platform for mobile devices, featuring product browsing, car
 - Cart management
 - Secure checkout with 3 payment methods (Cash on Delivery, PayPal, Stripe)
 - Webhook handling for real-time payment confirmation
+- Authentication and JWT-based authorization
 - Admin dashboard with analytics (revenue, orders, top products)
 - Role-based access control (Admin, Manager, Demo)
 - Responsive design
@@ -103,7 +104,7 @@ A modern e-commerce platform for mobile devices, featuring product browsing, car
 
 ## Test Credentials
 
-**Demo Read-Only Admin**
+**Demo User (Read-Only Admin Access)**
 
 - Email: `demo@mobiletech.manosgrigorakis.com`
 - Password: `!Demo123@`
@@ -119,6 +120,11 @@ A modern e-commerce platform for mobile devices, featuring product browsing, car
 - Decline Card: `4000 0000 0000 0002`
 - Expiry: Any future date
 - CVC: Any 3 digits
+
+## API
+
+A Postman collection is available for testing the API endpoints. \
+Import `docs/postman/MobileTech.postman_collection.json` into Postman.
 
 ## Screenshots
 
