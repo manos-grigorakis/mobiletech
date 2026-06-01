@@ -8,9 +8,11 @@ import com.mgrigorakis.mobiletech.mapper.CategoryMapper;
 import com.mgrigorakis.mobiletech.model.Category;
 import com.mgrigorakis.mobiletech.repository.CategoryRepository;
 import com.mgrigorakis.mobiletech.repository.ProductRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +25,14 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
+    @Cacheable(value = "categories", key = "'all'")
     @Override
     public List<CategoryResponse> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream().map(CategoryMapper::toResponse).toList();
     }
 
+    @Cacheable(value = "categories", key = "#id")
     @Override
     public CategoryResponse getCategoryById(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> {
@@ -39,6 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryMapper.toResponse(category);
     }
 
+    @CacheEvict(value = "categories", key = "'all'")
     @Override
     public CategoryResponse createCategory(CategoryRequest dto) {
         Category category = CategoryMapper.toEntity(dto);
@@ -48,6 +53,10 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryMapper.toResponse(savedCategory);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "categories", key = "#id"),
+            @CacheEvict(value = "categories", key = "'all'")
+    })
     @Override
     public CategoryResponse updateCategoryById(Long id, CategoryRequest dto) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> {
@@ -64,6 +73,10 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryMapper.toResponse(savedCategory);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "categories", key = "#id"),
+            @CacheEvict(value = "categories", key = "'all'")
+    })
     @Override
     public void deleteCategoryById(Long id) {
         if (!categoryRepository.existsById(id)) {
