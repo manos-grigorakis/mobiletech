@@ -16,7 +16,7 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -47,7 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse createCategory(CategoryRequest dto) {
         Category category = CategoryMapper.toEntity(dto);
-        validateUnique(category.getName(), category.getSlug(), category.getId());
+        validateUnique(category.getName(), category.getSlug(), null);
 
         Category savedCategory = categoryRepository.save(category);
         return CategoryMapper.toResponse(savedCategory);
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
             return new ResourceNotFoundException("Category with id " + id + " not found");
         });
 
-        validateUnique(category.getName(), category.getSlug(), category.getId());
+        validateUnique(dto.name(), dto.slug(), id);
 
         category.setName(dto.name());
         category.setSlug(dto.slug());
@@ -100,26 +100,14 @@ public class CategoryServiceImpl implements CategoryService {
      * @param id The {@link Category#id}
      */
     private void validateUnique(String name, String slug, Long id) {
-        Optional<Category> existsByName = categoryRepository.findByName(name);
+        categoryRepository.findByName(name).filter(c -> !Objects.equals(c.getId(), id))
+                .ifPresent(c -> {
+                    throw new ConflictException("Category with name " + name + " already exists", "CATEGORY_ΝΑΜΕ_EXISTS");
+                });
 
-        if(existsByName.isPresent()) {
-            Category category = existsByName.get();
-
-            if(!category.getName().equals(name)) {
-                log.warn("Category with name {} already exists", name);
-                throw new ConflictException("Category with name " + name + " already exists", "CATEGORY_ΝΑΜΕ_EXISTS");
-            }
-        }
-
-        Optional<Category> existsBySlug = categoryRepository.findBySlug(slug);
-
-        if(existsBySlug.isPresent()) {
-            Category category = existsBySlug.get();
-
-            if(!category.getSlug().equals(slug)) {
-                log.warn("Category with slug {} already exists", slug);
-                throw new ConflictException("Category with slug " + slug + " already exists",  "CATEGORY_SLUG_EXISTS");
-            }
-        }
+        categoryRepository.findBySlug(slug).filter(c -> !Objects.equals(c.getId(), id))
+                .ifPresent(c -> {
+                    throw new ConflictException("Category with slug " + slug + " already exists", "CATEGORY_SLUG_EXISTS");
+        });
     }
 }
