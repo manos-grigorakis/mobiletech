@@ -1,5 +1,6 @@
 package com.mgrigorakis.mobiletech.security.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +31,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtService.extractUsername(token);
+
+            try {
+                username = jwtService.extractUsername(token);
+            } catch (ExpiredJwtException e) {
+                // Token expired continue as anonymous (to have access to public endpoints if the requests contains JWT)
+                filterChain.doFilter(request, response);
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
