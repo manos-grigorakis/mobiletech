@@ -26,9 +26,6 @@ COPY --from=builder /app/target/*.jar app.jar
 RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
 
 # Expose ports
-# Actuator
-EXPOSE 9090
-
 # Tomcat Server
 EXPOSE 8080
 
