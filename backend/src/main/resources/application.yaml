@@ -12,6 +12,12 @@ spring:
     hibernate:
       ddl-auto: update
 
+  cache:
+    type: caffeine
+    cache-names: "categories,products,orders,analytics"
+    caffeine:
+      spec: "maximumSize=500,expireAfterWrite=500s"
+
 management:
   endpoints:
     web:

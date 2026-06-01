@@ -15,6 +15,9 @@ import com.mgrigorakis.mobiletech.repository.OrderRepository;
 import com.mgrigorakis.mobiletech.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
+    @Cacheable(value = "orders", key = "#filter.page + '-' + #filter.size + '-' + #sort.sortBy + '-' + #sort.sortDirection")
     @Override
     public Page<OrderResponse> getOrders(PageSortRequest sort, PageFilterRequest filter) {
         Pageable pageable = PageRequest.of(filter.page(), filter.size(), sort.createSort());
@@ -37,6 +41,7 @@ public class OrderServiceImpl implements OrderService {
         return orders.map(OrderMapper::toResponse);
     }
 
+    @Cacheable(value = "orders", key = "#id")
     @Override
     public OrderResponse getOrderById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> {
@@ -47,6 +52,7 @@ public class OrderServiceImpl implements OrderService {
         return OrderMapper.toResponse(order);
     }
 
+    @CacheEvict(value = "orders", allEntries = true)
     @Override
     public OrderResponse createOrder(OrderRequest orderRequest) {
         List<OrderItem> orderItems = orderRequest.orderItems().stream().map(orderItemRequest -> {
@@ -65,6 +71,10 @@ public class OrderServiceImpl implements OrderService {
         return OrderMapper.toResponse(savedOrder);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "orders", allEntries = true),
+            @CacheEvict(value = "orders", key = "#id")
+    })
     @Override
     public OrderResponse updateOrderStatusById(Long id, OrderStatusUpdateRequest orderStatusRequest) {
         Order order = orderRepository.findById(id).orElseThrow(() -> {

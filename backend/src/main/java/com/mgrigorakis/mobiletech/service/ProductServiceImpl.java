@@ -18,6 +18,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +41,8 @@ public class ProductServiceImpl  implements ProductService {
     @Value("${app.storage.bucket-prefix-products}")
     private String bucketPrefixProducts;
 
+    @Cacheable(value = "products", key = "#filterRequest.size + '-' + #filterRequest.page + '-' " +
+            "+ #sortRequest.sortDirection + '-' + #sortRequest.sortBy + '-' + #category")
     @Override
     public Page<ProductResponse> getAllProducts(
             PageFilterRequest filterRequest, PageSortRequest sortRequest, String category) {
@@ -52,6 +57,7 @@ public class ProductServiceImpl  implements ProductService {
         });
     }
 
+    @Cacheable(value = "products", key = "#id")
     @Override
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> {
@@ -63,6 +69,8 @@ public class ProductServiceImpl  implements ProductService {
         return ProductMapper.toResponse(product, imageUrl);
     }
 
+
+    @CacheEvict(value = "products", allEntries = true)
     @Transactional
     @Override
     public ProductResponse createProduct(ProductCreateRequest dto) {
@@ -88,6 +96,10 @@ public class ProductServiceImpl  implements ProductService {
         }
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "products", allEntries = true),
+            @CacheEvict(value = "products", key = "#id")
+    })
     @Transactional
     @Override
     public ProductResponse updateProductById(Long id, ProductUpdateRequest dto) {
@@ -95,7 +107,6 @@ public class ProductServiceImpl  implements ProductService {
             log.warn("Product not found with id {}", id);
             return new ResourceNotFoundException("Product not found with id " + id);
         });
-
 
 
         Category category = categoryRepository.findById(dto.categoryId()).orElseThrow(() -> {
@@ -128,6 +139,10 @@ public class ProductServiceImpl  implements ProductService {
         }
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "products", allEntries = true),
+            @CacheEvict(value = "products", key = "#id")
+    })
     @Transactional
     @Override
     public void deleteProductById(Long id) {

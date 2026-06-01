@@ -32,6 +32,7 @@
         <paypal.version>2.0.0</paypal.version>
         <stripe.version>32.1.0</stripe.version>
         <jjwt.version>0.13.0</jjwt.version>
+        <caffeine.version>3.2.4</caffeine.version>
     </properties>
     <dependencies>
         <dependency>
@@ -120,6 +121,18 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>${jjwt.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- Cache -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
     </dependencies>
 
