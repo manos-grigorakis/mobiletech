@@ -6,16 +6,18 @@ import { useUiStore } from './ui'
 import { jwtDecode } from 'jwt-decode'
 import type { JwtPayload } from '@/types/jwt-payload'
 import type { RegisterRequest } from '@/types/register-request'
+import router from '@/router'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as User | null,
     token: null as string | null,
     isAuthenticated: false as boolean,
+    sessionExpiresAt: null as number | null,
   }),
 
   persist: {
-    pick: ['user', 'token', 'isAuthenticated'],
+    pick: ['user', 'token', 'isAuthenticated', 'sessionExpiresAt'],
   },
 
   getters: {
@@ -48,6 +50,8 @@ export const useAuthStore = defineStore('auth', {
         }
 
         this.isAuthenticated = true
+        this.sessionExpiresAt = decoded.exp! * 1000
+        this.scheduleLogout()
       } catch (e) {
         console.error(e)
         this.isAuthenticated = false
@@ -66,9 +70,31 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    scheduleLogout() {
+      if (!this.sessionExpiresAt) return
+      const msUntilExpiration = this.sessionExpiresAt - Date.now()
+
+      // 2 minutes before expiration show banner
+      if (msUntilExpiration > 120_000) {
+        setTimeout(() => {
+          useUiStore().setWarning('Your session expires in 2 minutes', 119_000)
+        }, msUntilExpiration - 120_000)
+      }
+
+      setTimeout(() => {
+        useUiStore().clearToast()
+        useUiStore().setWarning('Your session has expired. Please log in again.')
+        setTimeout(() => {
+          this.logout()
+          router.push({ name: 'login' })
+        }, 500)
+      }, msUntilExpiration)
+    },
+
     logout() {
       this.token = null
       this.isAuthenticated = false
+      this.sessionExpiresAt = null
     },
   },
 })
