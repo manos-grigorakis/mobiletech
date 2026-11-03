@@ -3,7 +3,9 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import CartIcon from '../ui/CartIcon.vue'
 import { useAuthStore } from '@/stores/auth'
 import UserDropdown from './UserDropdown.vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const auth = useAuthStore()
 const scrolled = ref(false)
 const isNavbarOpen = ref(false)
@@ -38,6 +40,10 @@ const onScroll = () => {
 const logout = () => {
   closeNavbar()
   auth.logout()
+}
+
+const isActive = (link: (typeof navLinks)[number]) => {
+  return route.path === link.path && route.query.category === link.query?.category
 }
 
 // Lifecycle
@@ -105,9 +111,12 @@ onUnmounted(() => {
             :key="link.label"
             class="inline-block capitalize cursor-pointer hover:text-accent-500"
           >
-            <RouterLink :to="{ path: link.path, query: link.query }" @click="closeNavbar">{{
-              link.label
-            }}</RouterLink>
+            <RouterLink
+              :to="{ path: link.path, query: link.query }"
+              @click="closeNavbar"
+              :class="{ 'text-accent-500': isActive(link) }"
+              >{{ link.label }}</RouterLink
+            >
           </li>
         </ul>
 

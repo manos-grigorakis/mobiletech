@@ -35,6 +35,7 @@ const logout = () => {
         <li v-for="link in navLinks" :key="link.label">
           <RouterLink
             :to="{ name: link.routeName }"
+            exact-active-class="bg-accent-700"
             class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent-700"
           >
             <component :is="link.icon" :size="20" />
